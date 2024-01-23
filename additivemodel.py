@@ -1,6 +1,5 @@
 #amazonの株価（全期間）を加法モデルで分解してみる
 
-
 import plotly
 import pandas as pd
 from statsmodels.tsa.seasonal import seasonal_decompose
