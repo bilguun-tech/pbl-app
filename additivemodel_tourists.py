@@ -1,19 +1,19 @@
-#amazonの株価（全期間）を加法モデルで分解
+#tourists(中国)を加法モデルで分解
 
 import plotly
 import pandas as pd
 from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 
-data = pd.read_csv("S&P500_stock_prices.csv")
+data = pd.read_csv("tourists.csv")
 df = pd.DataFrame(data)
-df = df[["date","AMZN"]]
-df.set_index("date", inplace=True)
+df = df[["年","中国"]]
+df.set_index("年", inplace=True)
 #print(df.head())
 
 
 # 成分分解
-result=seasonal_decompose(df, model='additive', period=30) # 30日周期 #加法モデル
+result=seasonal_decompose(df, model='additive', period=10) # 10年周期 #加法モデル
 #result=seasonal_decompose(df, model='multiplicative', period=30) #乗法モデル
 # グラフ化
 result.plot()
@@ -23,8 +23,8 @@ result.plot()
 plt.figure(figsize=(10, 8))
 
 # オリジナルデータのプロット
-plt.subplot(4, 1, 1)
-plt.plot(df['AMZN'], label='Original')
+plt.subplot(4, 1, 1,sharex=plt.gca())
+plt.plot(df['中国'], label='Original')
 plt.legend()
 
 # Trendデータのプロット
@@ -43,7 +43,7 @@ plt.plot(result.resid, label='Residual')
 plt.legend()
 
 # 横軸（時間軸）の目盛りを1ヶ月ごとに設定
-plt.gca().xaxis.set_major_locator(plt.MaxNLocator(12))
+plt.gca().xaxis.set_major_locator(plt.MaxNLocator(10))
 
 # グラフを表示
 plt.tight_layout()
