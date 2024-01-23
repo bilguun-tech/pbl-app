@@ -13,7 +13,7 @@ df.set_index("年", inplace=True)
 
 
 # 成分分解
-result=seasonal_decompose(df, model='additive', period=10) # 10年周期 #加法モデル
+result=seasonal_decompose(df, model='additive', period=5) # 10年周期 #加法モデル
 #result=seasonal_decompose(df, model='multiplicative', period=30) #乗法モデル
 # グラフ化
 result.plot()
