@@ -16,7 +16,7 @@ df.set_index("date", inplace=True)
 
 # 成分分解
 result=seasonal_decompose(df, model='additive', period=30) # 30日周期 #加法モデル
-#result=seasonal_decompose(df, model='multiplicative', period=12) #乗法モデル
+#result=seasonal_decompose(df, model='multiplicative', period=30) #乗法モデル
 # グラフ化
 result.plot()
 #plt.show()
