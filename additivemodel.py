@@ -1,4 +1,4 @@
-#amazonの株価（全期間）を加法モデルで分解してみる
+#amazonの株価（全期間）を加法モデルで分解
 
 import plotly
 import pandas as pd

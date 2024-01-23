@@ -13,3 +13,7 @@ PyQt5-sip==12.13.0
 python-dateutil==2.8.2
 sip==6.8.1
 six==1.16.0
+
+plotly
+pandas
+statsmodels
