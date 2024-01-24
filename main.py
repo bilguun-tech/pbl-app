@@ -1,4 +1,5 @@
 import sys
+import pandas as pd
 from PyQt5.QtWidgets import (
     QApplication,
     QWidget,
@@ -15,7 +16,7 @@ from analysis_methods import (
     method1,
     method2,
     method3,
-)  # Import your analysis methods from analysis_methods.py
+)
 
 
 class DataAnalyzerApp(QWidget):
@@ -28,7 +29,7 @@ class DataAnalyzerApp(QWidget):
         self.setWindowTitle("Data Analyzer")
         self.setGeometry(100, 100, 800, 400)
 
-        # Widgets for file import and method selection
+        self.data = None
         self.file_label = QLabel("No file selected")
         self.import_button = QPushButton("Import File", self)
         self.import_button.clicked.connect(self.import_file)
@@ -73,11 +74,16 @@ class DataAnalyzerApp(QWidget):
 
         if file_path:
             self.file_label.setText(f"File: {file_path}")
-            # You can add further processing or loading data from the file here.
+            # Read CSV file using pandas
+            try:
+                # Store the data as an attribute
+                self.data = pd.read_csv(file_path)
+
+            except Exception as e:
+                # Handle any potential errors during reading the CSV file
+                print(f"Error reading CSV file: {e}")
 
     def analyze_and_display(self, analysis_method):
-        # Assuming analysis_method is a function that takes data and returns a plot
-        # You need to replace this with your actual analysis method implementation
         data = []  # Replace with your data or data loading code
         plot = analysis_method(data)
 
