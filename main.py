@@ -1,5 +1,6 @@
 import sys
 import pandas as pd
+import numpy as np
 from PyQt5.QtWidgets import (
     QApplication,
     QWidget,
@@ -8,13 +9,20 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QLabel,
     QFileDialog,
+    QComboBox,
 )
 from PyQt5.QtGui import QImage, QPixmap
 
 import matplotlib.pyplot as plt
-from analysis_methods import (
+from analysis_methods.method1 import (
     method1,
+)
+
+from analysis_methods.method2 import (
     method2,
+)
+
+from analysis_methods.method3 import (
     method3,
 )
 
@@ -34,16 +42,17 @@ class DataAnalyzerApp(QWidget):
         self.import_button = QPushButton("Import File", self)
         self.import_button.clicked.connect(self.import_file)
 
+        # Analysis method selection using QComboBox
         self.method_label = QLabel("Select Analysis Method:")
-        self.method_buttons = []
-        for i, method in enumerate([method1, method2, method3]):
-            button = QPushButton(f"Method {i + 1}", self)
-            button.clicked.connect(lambda _, m=method: self.analyze_and_display(m))
-            self.method_buttons.append(button)
+        self.method_combobox = QComboBox(self)
+        self.method_combobox.addItems(["Method 1", "Method 2", "Method 3"])
+
+        # Button to start analysis
+        self.start_analysis_button = QPushButton("Start Analysis", self)
+        self.start_analysis_button.clicked.connect(self.start_analysis)
 
         # Widgets for displaying graphs
         self.graph1_label = QLabel("Graph 1")
-        self.graph2_label = QLabel("Graph 2")
 
         # Layout setup
         layout = QHBoxLayout(self)
@@ -51,17 +60,16 @@ class DataAnalyzerApp(QWidget):
         # Left side layout for graphs
         left_layout = QVBoxLayout()
         left_layout.addWidget(self.graph1_label)
-        left_layout.addWidget(self.graph2_label)
         layout.addLayout(left_layout)
 
-        # Right side layout for file import and method selection
+        # Right side layout for file import, method selection, and analysis button
         right_layout = QVBoxLayout()
         right_layout.addWidget(self.file_label)
         right_layout.addWidget(self.import_button)
         right_layout.addWidget(self.method_label)
+        right_layout.addWidget(self.method_combobox)
+        right_layout.addWidget(self.start_analysis_button)
         right_layout.addStretch(1)
-        for button in self.method_buttons:
-            right_layout.addWidget(button)
         layout.addLayout(right_layout)
 
         self.setLayout(layout)
@@ -83,34 +91,48 @@ class DataAnalyzerApp(QWidget):
                 # Handle any potential errors during reading the CSV file
                 print(f"Error reading CSV file: {e}")
 
-    def analyze_and_display(self, analysis_method):
-        data = []  # Replace with your data or data loading code
-        plot = analysis_method(data)
+    def start_analysis(self):
+        # Get the selected analysis method from the combobox
+        selected_method = self.method_combobox.currentText()
 
-        if plot:
-            if isinstance(plot, plt.Figure):
-                self.show_matplotlib_plot(plot)
-            else:
-                print("Invalid plot type")
+        # Map the selected method to the corresponding function
+        method_mapping = {"Method 1": method1, "Method 2": method2, "Method 3": method3}
+
+        analysis_method = method_mapping.get(selected_method)
+
+        if analysis_method:
+            plot = analysis_method(self.data)
+
+            if plot:
+                if isinstance(plot, plt.Figure):
+                    self.show_matplotlib_plot(plot)
+                else:
+                    print("Invalid plot type")
 
     def show_matplotlib_plot(self, plot):
         # Clear existing plots
         self.graph1_label.clear()
-        self.graph2_label.clear()
 
         # Display the plots in the QLabel widgets
         self.graph1_label.setPixmap(self.plot_to_pixmap(plot))
-        self.graph2_label.setPixmap(self.plot_to_pixmap(plot))
 
     def plot_to_pixmap(self, plot):
-        buf = plot.canvas.buffer_rgba()
-        qimage = QImage(
-            buf,
-            plot.canvas.get_width_height()[0],
-            plot.canvas.get_width_height()[1],
-            QImage.Format_RGBA8888,
-        )
+        # Create a figure and render it to a pixmap
+        figure = plot.figure
+        canvas = figure.canvas
+        canvas.draw()  # Ensure the figure is drawn
+
+        # Convert the rendered figure to a NumPy array
+        width, height = figure.get_size_inches() * figure.get_dpi()
+        buf = canvas.buffer_rgba()
+        img = np.frombuffer(buf, dtype=np.uint8).reshape(int(height), int(width), 4)
+
+        # Create a QImage from the NumPy array
+        qimage = QImage(img.data, int(width), int(height), QImage.Format_RGBA8888)
+
+        # Create a QPixmap from the QImage
         pixmap = QPixmap.fromImage(qimage)
+
         return pixmap
 
 
