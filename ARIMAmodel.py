@@ -5,8 +5,10 @@ from statsmodels.tsa.arima.model import ARIMA
 
 #filename = "tourists.csv"
 filename = "S&P500_stock_prices.csv"
-selected_x = "date"
-selected_series = "AMZN"
+filename="updated_sorted.csv"
+
+selected_x = "time"
+selected_series = "time_diff"
 
 data = pd.read_csv(filename)
 df = pd.DataFrame(data)
@@ -19,11 +21,11 @@ df.set_index(selected_x, inplace=True)
 
 # ADF検定（原系列）定常過程かどうかを検定する
 dftest = adfuller(df)
-print('ADF Statistic: %f' % dftest[0])
+#print('ADF Statistic: %f' % dftest[0])
 print('p-value: %f' % dftest[1])
-print('Critical values :')
-for k, v in dftest[4].items():
-    print('\t', k, v)
+#print('Critical values :')
+#for k, v in dftest[4].items():
+#    print('\t', k, v)
 
 
 #プログラムのURL:https://toukei-lab.com/python_stock
