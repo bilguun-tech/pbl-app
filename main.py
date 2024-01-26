@@ -11,21 +11,25 @@ from PyQt5.QtWidgets import (
     QFileDialog,
     QComboBox,
 )
+
 from PyQt5.QtGui import QImage, QPixmap
 
 import matplotlib.pyplot as plt
-from analysis_methods.method1 import (
-    method1,
-)
+# from analysis_methods.method1 import (
+#     method1,
+# )
 
-from analysis_methods.method2 import (
-    method2,
-)
+# from analysis_methods.method2 import (
+#     method2,
+# )
 
-from analysis_methods.method3 import (
-    method3,
-)
+# from analysis_methods.method3 import (
+#     method3,
+# )
 
+from analysis_methods.ETSmodel import (
+    ETSmodel,
+)
 
 class DataAnalyzerApp(QWidget):
     def __init__(self):
@@ -45,7 +49,12 @@ class DataAnalyzerApp(QWidget):
         # Analysis method selection using QComboBox
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
-        self.method_combobox.addItems(["Method 1", "Method 2", "Method 3"])
+        self.method_combobox.addItems(["ETSmodel"])
+        # self.method_combobox.addItems(["Method 1", "Method 2", "Method 3", "ETSmodel"])
+
+        # Column name selection using QComboBox
+        self.column_label = QLabel("Select Column Name:")
+        self.column_combobox = QComboBox(self)
 
         # Button to start analysis
         self.start_analysis_button = QPushButton("Start Analysis", self)
@@ -68,6 +77,8 @@ class DataAnalyzerApp(QWidget):
         right_layout.addWidget(self.import_button)
         right_layout.addWidget(self.method_label)
         right_layout.addWidget(self.method_combobox)
+        right_layout.addWidget(self.column_label)
+        right_layout.addWidget(self.column_combobox)
         right_layout.addWidget(self.start_analysis_button)
         right_layout.addStretch(1)
         layout.addLayout(right_layout)
@@ -87,6 +98,13 @@ class DataAnalyzerApp(QWidget):
                 # Store the data as an attribute
                 self.data = pd.read_csv(file_path)
 
+                # Debug print
+                # print(self.data.head())  # Display the first few rows of the data
+
+                # Populate column_combobox with column names
+                self.column_combobox.clear()
+                self.column_combobox.addItems(self.data.columns[1:])  # Exclude the first column
+
             except Exception as e:
                 # Handle any potential errors during reading the CSV file
                 print(f"Error reading CSV file: {e}")
@@ -94,14 +112,16 @@ class DataAnalyzerApp(QWidget):
     def start_analysis(self):
         # Get the selected analysis method from the combobox
         selected_method = self.method_combobox.currentText()
+        selected_column = self.column_combobox.currentText()
 
         # Map the selected method to the corresponding function
-        method_mapping = {"Method 1": method1, "Method 2": method2, "Method 3": method3}
+        # method_mapping = {"Method 1": method1, "Method 2": method2, "Method 3": method3, "ETSmodel": ETSmodel}
+        method_mapping = {"ETSmodel": ETSmodel}
 
         analysis_method = method_mapping.get(selected_method)
 
         if analysis_method:
-            plot = analysis_method(self.data)
+            plot = analysis_method(self.data, selected_column)
 
             if plot:
                 if isinstance(plot, plt.Figure):
