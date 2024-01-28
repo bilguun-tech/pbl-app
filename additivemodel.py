@@ -5,7 +5,7 @@ import pandas as pd
 from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 
-data = pd.read_csv("S&P500_stock_prices.csv")
+data = pd.read_csv("datasets/S&P500_stock_prices.csv")
 df = pd.DataFrame(data)
 df = df[["date","AMZN"]]
 df.set_index("date", inplace=True)
@@ -16,7 +16,7 @@ df.set_index("date", inplace=True)
 result=seasonal_decompose(df, model='additive', period=30) # 30日周期 #加法モデル
 #result=seasonal_decompose(df, model='multiplicative', period=30) #乗法モデル
 # グラフ化
-result.plot()
+#result.plot()
 #plt.show()
 
 # グラフのサイズを設定

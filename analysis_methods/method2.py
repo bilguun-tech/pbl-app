@@ -1,3 +1,4 @@
+#加法モデル
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly
@@ -17,7 +18,7 @@ def method2(data):
     result=seasonal_decompose(df, model='additive', period=30) # 30日周期 #加法モデル
     #result=seasonal_decompose(df, model='multiplicative', period=30) #乗法モデル
     # グラフ化
-    result.plot()
+    #result.plot()
     #plt.show()
 
     # グラフのサイズを設定
@@ -48,4 +49,8 @@ def method2(data):
 
     # グラフを表示
     plt.tight_layout()
-    plt.show()
+    #plt.show()
+    # グラフを非表示にしてfigを返す
+    #plt.close()  # グラフを閉じる
+    fig = plt.gcf()  # 現在のFigureを取得
+    return fig
