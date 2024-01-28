@@ -4,11 +4,11 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.arima.model import ARIMA
 
 #filename = "tourists.csv"
-filename = "S&P500_stock_prices.csv"
-filename="updated_sorted.csv"
+filename = "datasets/S&P500_stock_prices.csv"
+#filename="updated_sorted.csv"
 
-selected_x = "time"
-selected_series = "time_diff"
+selected_x = "date"
+selected_series = "AMZN"
 
 data = pd.read_csv(filename)
 df = pd.DataFrame(data)
