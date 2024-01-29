@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (
     QComboBox,
     QProgressBar,  # Added QProgressBar for loading state
 )
+
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import QThread, pyqtSignal
 
@@ -25,13 +26,14 @@ from analysis_methods.ETS_model import ETS_model
 class AnalysisThread(QThread):
     analysis_complete = pyqtSignal(object)
 
-    def __init__(self, analysis_method, data):
+    def __init__(self, analysis_method, data, selected_column):
         super().__init__()
         self.analysis_method = analysis_method
         self.data = data
+        self.selected_column = selected_column
 
     def run(self):
-        plot = self.analysis_method(self.data)
+        plot = self.analysis_method(self.data, self.selected_column)
         self.analysis_complete.emit(plot)
 
 
@@ -56,6 +58,10 @@ class DataAnalyzerApp(QWidget):
         self.method_combobox.addItems(
             ["Just Plot", "Additive method", "Arima method", "ETS model"]
         )
+
+        # Column name selection using QComboBox
+        self.column_label = QLabel("Select Column Name:")
+        self.column_combobox = QComboBox(self)
 
         # Button to start analysis
         self.start_analysis_button = QPushButton("Start Analysis", self)
@@ -85,6 +91,8 @@ class DataAnalyzerApp(QWidget):
         right_layout.addWidget(self.import_button)
         right_layout.addWidget(self.method_label)
         right_layout.addWidget(self.method_combobox)
+        right_layout.addWidget(self.column_label)
+        right_layout.addWidget(self.column_combobox)
         right_layout.addWidget(self.start_analysis_button)
         right_layout.addWidget(self.loading_indicator)
         right_layout.addStretch(1)
@@ -105,6 +113,12 @@ class DataAnalyzerApp(QWidget):
                 # Store the data as an attribute
                 self.data = pd.read_csv(file_path)
 
+                # Populate column_combobox with column names
+                self.column_combobox.clear()
+                self.column_combobox.addItems(
+                    self.data.columns[1:]
+                )  # Exclude the first column
+
             except Exception as e:
                 # Handle any potential errors during reading the CSV file
                 print(f"Error reading CSV file: {e}")
@@ -112,6 +126,7 @@ class DataAnalyzerApp(QWidget):
     def start_analysis(self):
         # Get the selected analysis method from the combobox
         selected_method = self.method_combobox.currentText()
+        selected_column = self.column_combobox.currentText()
 
         # Map the selected method to the corresponding function
         method_mapping = {
@@ -125,7 +140,9 @@ class DataAnalyzerApp(QWidget):
 
         if analysis_method:
             self.show_loading_state(True)
-            self.analysis_thread = AnalysisThread(analysis_method, self.data)
+            self.analysis_thread = AnalysisThread(
+                analysis_method, self.data, selected_column
+            )
             self.analysis_thread.analysis_complete.connect(self.analysis_complete)
             self.analysis_thread.start()
 
