@@ -47,25 +47,31 @@ def method3(data):
         #ARIMAモデル 予測
         history = [x for x in train_data]
         model_predictions = []
+
         for time_point in range(len(test_data)):
-        #ARIMAモデル 実装
-            model = ARIMA(history, order=(6,1,0))
+            # ARIMAモデル 実装
+            model = ARIMA(history, order=(6, 1, 0))
             model_fit = model.fit()
-        #予測データの出力
+            # 予測データの出力
             output = model_fit.forecast()
             yhat = output[0]
             model_predictions.append(yhat)
-        #トレーニングデータの取り込み
+            # トレーニングデータの取り込み
             true_test_value = test_data[time_point]
             history.append(true_test_value)
+        # サブプロットの設定
+        fig, axs = plt.subplots()
 
-        #可視化
-        plt.plot(test_data, color='Red', label='Measured')
-        plt.plot(model_predictions, color='Blue', label='prediction')
-        plt.title('Amazon stock price prediction', fontname="MS Gothic")
-        plt.xlabel('date', fontname="MS Gothic")
-        plt.ylabel('Amazon stock price', fontname="MS Gothic")
-        plt.legend(prop={"family":"MS Gothic"})
-        #plt.show()
-        fig = plt.gcf()  # 現在のFigureを取得
-    return fig
+        # 実測値の描画
+        axs.plot(test_data, color='Red', label='Measured')
+        # 予測値の描画
+        axs.plot(model_predictions, color='Blue', label='Prediction')
+        axs.set_title(' ARIMA model', fontname="MS Gothic")
+        axs.set_xlabel('Date', fontname="MS Gothic")
+        axs.set_ylabel('Amazon stock price', fontname="MS Gothic")
+        axs.legend(prop={"family": "MS Gothic"})
+
+        
+        #axs.set_title('Prediction', fontname="MS Gothic")
+
+        return fig
