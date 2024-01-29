@@ -10,21 +10,28 @@ from PyQt5.QtWidgets import (
     QLabel,
     QFileDialog,
     QComboBox,
+    QProgressBar,  # Added QProgressBar for loading state
 )
 from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtCore import QThread, pyqtSignal
 
 import matplotlib.pyplot as plt
-from analysis_methods.just_plot import (
-    just_plot,
-)
+from analysis_methods.just_plot import just_plot
+from analysis_methods.additive_method import additive_method
+from analysis_methods.arima import arima
 
-from analysis_methods.additive_method import (
-    additive_method,
-)
 
-from analysis_methods.method3 import (
-    method3,
-)
+class AnalysisThread(QThread):
+    analysis_complete = pyqtSignal(object)
+
+    def __init__(self, analysis_method, data):
+        super().__init__()
+        self.analysis_method = analysis_method
+        self.data = data
+
+    def run(self):
+        plot = self.analysis_method(self.data)
+        self.analysis_complete.emit(plot)
 
 
 class DataAnalyzerApp(QWidget):
@@ -45,11 +52,18 @@ class DataAnalyzerApp(QWidget):
         # Analysis method selection using QComboBox
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
-        self.method_combobox.addItems(["Just Plot", "Additive method", "Method 3"])
+        self.method_combobox.addItems(["Just Plot", "Additive method", "Arima method"])
 
         # Button to start analysis
         self.start_analysis_button = QPushButton("Start Analysis", self)
         self.start_analysis_button.clicked.connect(self.start_analysis)
+
+        # Loading indicator
+        self.loading_indicator = QProgressBar(self)
+        self.loading_indicator.setMinimum(0)
+        self.loading_indicator.setMaximum(0)
+        self.loading_indicator.setTextVisible(False)
+        self.loading_indicator.hide()
 
         # Widgets for displaying graphs
         self.graph1_label = QLabel("Graph")
@@ -69,8 +83,12 @@ class DataAnalyzerApp(QWidget):
         right_layout.addWidget(self.method_label)
         right_layout.addWidget(self.method_combobox)
         right_layout.addWidget(self.start_analysis_button)
+        right_layout.addWidget(self.loading_indicator)
         right_layout.addStretch(1)
         layout.addLayout(right_layout)
+
+        # Set fixed width for the right side
+        right_layout.setFixedWidth(200)
 
         self.setLayout(layout)
 
@@ -97,21 +115,33 @@ class DataAnalyzerApp(QWidget):
 
         # Map the selected method to the corresponding function
         method_mapping = {
-            "Just plot": just_plot,
+            "Just Plot": just_plot,
             "Additive method": additive_method,
-            "Method 3": method3,
+            "Arima method": arima,
         }
 
         analysis_method = method_mapping.get(selected_method)
 
         if analysis_method:
-            plot = analysis_method(self.data)
+            self.show_loading_state(True)
+            self.analysis_thread = AnalysisThread(analysis_method, self.data)
+            self.analysis_thread.analysis_complete.connect(self.analysis_complete)
+            self.analysis_thread.start()
 
-            if plot:
-                if isinstance(plot, plt.Figure):
-                    self.show_matplotlib_plot(plot)
-                else:
-                    print("Invalid plot type")
+    def show_loading_state(self, state):
+        if state:
+            self.loading_indicator.show()
+        else:
+            self.loading_indicator.hide()
+
+    def analysis_complete(self, plot):
+        self.show_loading_state(False)
+
+        if plot:
+            if isinstance(plot, plt.Figure):
+                self.show_matplotlib_plot(plot)
+            else:
+                print("Invalid plot type")
 
     def show_matplotlib_plot(self, plot):
         # Clear existing plots
