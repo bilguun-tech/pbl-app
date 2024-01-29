@@ -4,7 +4,7 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.arima.model import ARIMA
 
 
-def arima(data):
+def arima(data, column_name):
     selected_x = "date"
     selected_series = "AMZN"
 
