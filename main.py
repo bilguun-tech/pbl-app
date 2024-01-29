@@ -14,12 +14,12 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QImage, QPixmap
 
 import matplotlib.pyplot as plt
-from analysis_methods.method1 import (
-    method1,
+from analysis_methods.just_plot import (
+    just_plot,
 )
 
-from analysis_methods.method2 import (
-    method2,
+from analysis_methods.additive_method import (
+    additive_method,
 )
 
 from analysis_methods.method3 import (
@@ -45,14 +45,14 @@ class DataAnalyzerApp(QWidget):
         # Analysis method selection using QComboBox
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
-        self.method_combobox.addItems(["Method 1", "Method 2", "Method 3"])
+        self.method_combobox.addItems(["Just Plot", "Additive method", "Method 3"])
 
         # Button to start analysis
         self.start_analysis_button = QPushButton("Start Analysis", self)
         self.start_analysis_button.clicked.connect(self.start_analysis)
 
         # Widgets for displaying graphs
-        self.graph1_label = QLabel("Graph 1")
+        self.graph1_label = QLabel("Graph")
 
         # Layout setup
         layout = QHBoxLayout(self)
@@ -96,7 +96,11 @@ class DataAnalyzerApp(QWidget):
         selected_method = self.method_combobox.currentText()
 
         # Map the selected method to the corresponding function
-        method_mapping = {"Method 1": method1, "Method 2": method2, "Method 3": method3}
+        method_mapping = {
+            "Just plot": just_plot,
+            "Additive method": additive_method,
+            "Method 3": method3,
+        }
 
         analysis_method = method_mapping.get(selected_method)
 
