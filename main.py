@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 from analysis_methods.just_plot import just_plot
 from analysis_methods.additive_method import additive_method
 from analysis_methods.arima import arima
+from analysis_methods.ETS_model import ETS_model
 
 
 class AnalysisThread(QThread):
@@ -52,7 +53,9 @@ class DataAnalyzerApp(QWidget):
         # Analysis method selection using QComboBox
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
-        self.method_combobox.addItems(["Just Plot", "Additive method", "Arima method"])
+        self.method_combobox.addItems(
+            ["Just Plot", "Additive method", "Arima method", "ETS model"]
+        )
 
         # Button to start analysis
         self.start_analysis_button = QPushButton("Start Analysis", self)
@@ -87,9 +90,6 @@ class DataAnalyzerApp(QWidget):
         right_layout.addStretch(1)
         layout.addLayout(right_layout)
 
-        # Set fixed width for the right side
-        right_layout.setFixedWidth(200)
-
         self.setLayout(layout)
 
     def import_file(self):
@@ -118,6 +118,7 @@ class DataAnalyzerApp(QWidget):
             "Just Plot": just_plot,
             "Additive method": additive_method,
             "Arima method": arima,
+            "ETS model": ETS_model,
         }
 
         analysis_method = method_mapping.get(selected_method)
