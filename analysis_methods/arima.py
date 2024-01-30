@@ -4,13 +4,10 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.arima.model import ARIMA
 
 
-def arima(data, column_name):
-    selected_x = "date"
-    selected_series = "AMZN"
-
-    df = pd.DataFrame(data)
-    df = df[[selected_x, selected_series]]
-    df.set_index(selected_x, inplace=True)
+def arima(df, column_name):
+    df["date"] = df.iloc[:, 0]
+    df = df[[column_name, "date"]]
+    df.set_index("date", inplace=True)
 
     # 可視化
     # df.plot()
@@ -32,8 +29,8 @@ def arima(data, column_name):
         print("データは定常過程ではありません")
         # ARIMAモデル データ準備
         train_data, test_data = df[0 : int(len(df) * 0.7)], df[int(len(df) * 0.7) :]
-        train_data = train_data[selected_series].values
-        test_data = test_data[selected_series].values
+        train_data = train_data[column_name].values
+        test_data = test_data[column_name].values
 
         # ARIMAモデル実装
         # train_data = df["close"].values

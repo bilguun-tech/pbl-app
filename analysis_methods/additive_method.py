@@ -1,13 +1,11 @@
 # 加法モデル
 import matplotlib.pyplot as plt
-import pandas as pd
 from statsmodels.tsa.seasonal import seasonal_decompose
 
 
-def additive_method(data, column_name):
-    # amazonの株価（全期間）を加法モデルで分解
-    df = pd.DataFrame(data)
-    df = df[["date", column_name]]
+def additive_method(df, column_name):
+    df["date"] = df.iloc[:, 0]
+    df = df[[column_name, "date"]]
     df.set_index("date", inplace=True)
     # print(df.head())
 
