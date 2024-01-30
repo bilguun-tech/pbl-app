@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def just_plot(data, column_name):
+<<<<<<< HEAD
     # time = data.iloc[:, 0]
     # value = data[column_name]
     # 前処理
@@ -15,6 +16,12 @@ def just_plot(data, column_name):
     data.plot()
     plt.xlabel(x_label, fontname="MS Gothic")
     ax.ticklabel_format(style="plain", axis="y")  # 指数表記から普通の表記に変換
+=======
+    time = data.iloc[:, 0]
+    value = data[column_name]
+    fig, ax = plt.subplots()
+    ax.plot(time, value)
+>>>>>>> 9e33400 (delete unnecessary datasets and improve arima and additive method source)
     ax.set_title("Just Plot")
 
     return fig
