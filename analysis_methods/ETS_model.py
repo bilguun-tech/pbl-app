@@ -30,10 +30,10 @@ def ETS_model(df, name):
     ETS_fit = ETS_model.fit()
 
     # 予測結果の取得
-    pred = ETS_fit.get_prediction(start=data.index[0], end=data.index[-1])
+    # pred = ETS_fit.get_prediction(start = data.index[0], end = data.index[-1]) # サンプル内予測
+    pred = ETS_fit.get_prediction(start = data.index[0], end = len(data)+len(data)//3) # サンプル+1/3予測
     df_pred = pred.summary_frame(alpha=0.05)
-    # print(df_pred)
-
+    
     # 可視化
     fig, ax = plt.subplots(figsize=(10, 6))
     ## 95%信頼区間表示
