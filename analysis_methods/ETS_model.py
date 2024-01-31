@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.exponential_smoothing.ets import ETSModel
 
 
-def ETS_model(df, name):
+def ETS_model(df, column_name):
     # 準備
     if "年" in df.columns:  # 年ごとのデータの場合
         xlabel_name = "Year"
         df["date"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
         df.set_index("date", inplace=True)
-        data = df[name].dropna()  # NaNの行を削除
+        data = df[column_name].dropna()  # NaNの行を削除
         if len(data) >= 24:
             num = 12
         else:
@@ -20,7 +20,7 @@ def ETS_model(df, name):
     elif "date" in df.columns:  # 1日ごとの場合
         xlabel_name = "date"
         df.set_index("date", inplace=True)
-        data = df[name].dropna()  # NaNの行を削除
+        data = df[column_name].dropna()  # NaNの行を削除
         num = 7
 
     # ETSモデルの構築
