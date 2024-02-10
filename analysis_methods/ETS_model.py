@@ -3,14 +3,14 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.exponential_smoothing.ets import ETSModel
-
+from pandas.tseries.offsets import DateOffset
 
 def ETS_model(df, column_name):
     # 準備
     if "年" in df.columns:  # 年ごとのデータの場合
         xlabel_name = "Year"
-        df["date"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
-        df.set_index("date", inplace=True)
+        df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
+        df.set_index("index", inplace=True)
         data = df[column_name].dropna()  # NaNの行を削除
         if len(data) >= 24:
             num = 12
@@ -19,20 +19,31 @@ def ETS_model(df, column_name):
 
     elif "date" in df.columns:  # 1日ごとの場合
         xlabel_name = "date"
-        df.set_index("date", inplace=True)
+        df["index"] = pd.to_datetime(df['date'])
+        df.set_index("index", inplace=True)  # 日付をインデックスに設定
         data = df[column_name].dropna()  # NaNの行を削除
         num = 7
+    
+    else:
+        # どの条件にも該当しない場合は、適切な処理を行う（例えばエラーメッセージを表示するなど）
+        raise ValueError("適切な列が見つかりません。")
 
     # ETSモデルの構築
-    ETS_model = ETSModel(
-        data, error="add", trend="add", seasonal="add", seasonal_periods=num
-    )
+    ETS_model = ETSModel(data, error="add", trend="add", seasonal="add", seasonal_periods=num)
     ETS_fit = ETS_model.fit()
 
     # 予測結果の取得
-    # pred = ETS_fit.get_prediction(start = data.index[0], end = data.index[-1]) # サンプル内予測
-    pred = ETS_fit.get_prediction(start = data.index[0], end = len(data)+len(data)//3) # サンプル+1/3予測
+    if xlabel_name == "Year":
+        pred_end = len(data) + len(data)//3 # サンプル内+1/3予測
+
+    else:
+        pred_end = data.index[-1] + pd.DateOffset(day=31)
+        if pred_end not in data.index:
+            pred_end = data.index[-1] # サンプル内予測
+    print(pred_end)
+    pred = ETS_fit.get_prediction(start=data.index[0], end=pred_end)
     df_pred = pred.summary_frame(alpha=0.05)
+    print(df_pred)
     
     # 可視化
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -48,3 +59,4 @@ def ETS_model(df, column_name):
     ax.legend()
 
     return fig
+

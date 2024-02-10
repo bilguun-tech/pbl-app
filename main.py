@@ -103,6 +103,9 @@ class DataAnalyzerApp(QWidget):
         selected_method = self.method_combobox.currentText()
         selected_column = self.column_combobox.currentText()
 
+        # Reset index
+        self.data.reset_index(drop=True, inplace=True)
+
         # Map the selected method to the corresponding function
         method_mapping = {
             "Just Plot": just_plot,
