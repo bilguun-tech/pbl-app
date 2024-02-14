@@ -11,7 +11,10 @@ from PyQt5.QtWidgets import (
     QFileDialog,
     QComboBox,
 )
+from PyQt5.QtCore import Qt
+
 from PyQt5.QtGui import QImage, QPixmap
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 from analysis_methods.just_plot import just_plot
@@ -29,7 +32,12 @@ class DataAnalyzerApp(QWidget):
     def init_ui(self):
         self.setWindowTitle("Data Analyzer")
         self.setGeometry(100, 100, 800, 400)
+        # Title label
+        heading = QLabel("Data Analyzer", self)
+        heading.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        heading.setObjectName("heading")
 
+        # Uploading csv file
         self.data = None
         self.file_label = QLabel("No file selected")
         self.import_button = QPushButton("Import File", self)
@@ -41,6 +49,7 @@ class DataAnalyzerApp(QWidget):
         self.method_combobox.addItems(
             ["Just Plot", "Additive method", "Arima method", "ETS model"]
         )
+        self.plot_widget = None
 
         # Column name selection using QComboBox
         self.column_label = QLabel("Select Column Name:")
@@ -50,30 +59,40 @@ class DataAnalyzerApp(QWidget):
         self.start_analysis_button = QPushButton("Start Analysis", self)
         self.start_analysis_button.clicked.connect(self.start_analysis)
 
-        # Widgets for displaying graphs
-        self.graph1_label = QLabel("Graph")
+        # QLabel to display the graph
+        self.graph1_label = QLabel(self)
 
-        # Layout setup
-        layout = QHBoxLayout(self)
+        # Main layout setup
+        main_layout = QVBoxLayout(self)
 
+        # Top layout for heading
+        top_layout = QVBoxLayout()
+        top_layout.addWidget(heading)
+        main_layout.addLayout(top_layout)
+
+        # Bottom layout for file import, method selection, and analysis button
+        bottom_layout = QHBoxLayout()
         # Left side layout for graphs
         left_layout = QVBoxLayout()
         left_layout.addWidget(self.graph1_label)
-        layout.addLayout(left_layout)
-
+        bottom_layout.addLayout(left_layout)
         # Right side layout for file import, method selection, and analysis button
         right_layout = QVBoxLayout()
         right_layout.addWidget(self.file_label)
         right_layout.addWidget(self.import_button)
+        right_layout.addStretch(1)
         right_layout.addWidget(self.method_label)
         right_layout.addWidget(self.method_combobox)
+        right_layout.addStretch(1)
         right_layout.addWidget(self.column_label)
         right_layout.addWidget(self.column_combobox)
+        right_layout.addStretch(1)
         right_layout.addWidget(self.start_analysis_button)
         right_layout.addStretch(1)
-        layout.addLayout(right_layout)
+        bottom_layout.addLayout(right_layout)
+        main_layout.addLayout(bottom_layout)
 
-        self.setLayout(layout)
+        self.setLayout(main_layout)
 
     def import_file(self):
         file_dialog = QFileDialog()
@@ -157,6 +176,8 @@ class DataAnalyzerApp(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setStyleSheet(Path("styles.qss").read_text())
+
     window = DataAnalyzerApp()
     window.show()
     sys.exit(app.exec_())
