@@ -174,7 +174,11 @@ class DataAnalyzerApp(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+<<<<<<< HEAD
     app.setStyleSheet(Path("styles.qss").read_text())
+=======
+    app.setStyleSheet(Path("style.qss").read_text())
+>>>>>>> b713113 (Added styles.qss)
 
     window = DataAnalyzerApp()
     window.show()
