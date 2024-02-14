@@ -189,10 +189,14 @@ class DataAnalyzerApp(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 <<<<<<< HEAD
+<<<<<<< HEAD
     app.setStyleSheet(Path("styles.qss").read_text())
 =======
     app.setStyleSheet(Path("style.qss").read_text())
 >>>>>>> b713113 (Added styles.qss)
+=======
+    app.setStyleSheet(Path("styles.qss").read_text())
+>>>>>>> b8908fb (Add pyqt core import)
 
     window = DataAnalyzerApp()
     window.show()
