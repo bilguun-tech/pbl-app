@@ -21,6 +21,7 @@ from analysis_methods.just_plot import just_plot
 from analysis_methods.additive_method import additive_method
 from analysis_methods.arima import arima
 from analysis_methods.ETS_model import ETS_model
+from analysis_methods.cluster import cluster
 
 
 class DataAnalyzerApp(QWidget):
@@ -39,10 +40,17 @@ class DataAnalyzerApp(QWidget):
 
         # Uploading csv file
         self.data = None
+        self.clustered_data = None
+        self.selected_dataset = None
         self.file_label = QLabel("No file selected")
         self.import_button = QPushButton("Import File", self)
         self.import_button.clicked.connect(self.import_file)
 
+        # Cluster or one plot selection using QComboBox
+        self.mode_label = QLabel("Choose cluster or each column:")
+        self.mode_combobox = QComboBox(self)
+        self.mode_combobox.addItems(["", "Cluster", "Each column"])
+        self.mode_combobox.currentIndexChanged.connect(self.populate_column_combobox)
         # Analysis method selection using QComboBox
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
@@ -81,11 +89,14 @@ class DataAnalyzerApp(QWidget):
         right_layout.addWidget(self.file_label)
         right_layout.addWidget(self.import_button)
         right_layout.addStretch(1)
-        right_layout.addWidget(self.method_label)
-        right_layout.addWidget(self.method_combobox)
+        right_layout.addWidget(self.mode_label)
+        right_layout.addWidget(self.mode_combobox)
         right_layout.addStretch(1)
         right_layout.addWidget(self.column_label)
         right_layout.addWidget(self.column_combobox)
+        right_layout.addStretch(1)
+        right_layout.addWidget(self.method_label)
+        right_layout.addWidget(self.method_combobox)
         right_layout.addStretch(1)
         right_layout.addWidget(self.start_analysis_button)
         right_layout.addStretch(1)
@@ -107,15 +118,27 @@ class DataAnalyzerApp(QWidget):
                 # Store the data as an attribute
                 self.data = pd.read_csv(file_path)
 
-                # Populate column_combobox with column names
-                self.column_combobox.clear()
-                self.column_combobox.addItems(
-                    self.data.columns[1:]
-                )  # Exclude the first column
+                # Show cluster plot
+                self.clustered_data, plot = cluster(self.data)
+                self.show_matplotlib_plot(plot)
 
             except Exception as e:
                 # Handle any potential errors during reading the CSV file
                 print(f"Error reading CSV file: {e}")
+
+    def populate_column_combobox(self, index):
+        if index == 2:
+            self.column_combobox.clear()
+            self.column_combobox.addItems(self.data.columns[1:])
+            self.selected_dataset = self.data
+        elif index == 1:
+            self.column_combobox.clear()
+            self.column_combobox.addItems(self.clustered_data.columns[1:])
+            self.selected_dataset = self.clustered_data
+        else:
+            self.column_combobox.clear()
+        # column_combobox.clear()
+        # column_combobox.addItems(data.columns[1:])
 
     def start_analysis(self):
         # Get the selected analysis method and column name from the combobox
@@ -134,7 +157,7 @@ class DataAnalyzerApp(QWidget):
 
         if analysis_method:
             # Perform analysis directly in the main thread
-            plot = analysis_method(self.data, selected_column)
+            plot = analysis_method(self.selected_dataset, selected_column)
             self.analysis_complete(plot)
 
     def analysis_complete(self, plot):

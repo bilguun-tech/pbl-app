@@ -1,5 +1,5 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+
 
 def just_plot(data, column_name):
     # time = data.iloc[:, 0]
