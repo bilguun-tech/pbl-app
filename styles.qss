@@ -1,0 +1,67 @@
+QWidget {
+  background-color: #fff;
+}
+QLabel {
+  color: #464d55;
+  font-weight: 600;
+}
+QLabel#heading {
+  color: #0f1925;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+QPushButton {
+  background-color: #0d6efd;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid #0d6efd;
+  padding: 5px 15px;
+  margin-top: 10px;
+  outline: 0px;
+}
+QPushButton:hover,
+QPushButton:focus {
+  background-color: #0b5ed7;
+  border: 3px solid #9ac3fe;
+}
+
+QComboBox {
+  background-color: #fff;
+  color: #464d55;
+  font-weight: 600;
+  border: 1px solid #0d6efd;
+  border-radius: 8px;
+  padding: 5px;
+  margin-top: 10px;
+  outline: 0px;
+}
+
+QComboBox:hover,
+QComboBox:focus {
+  border: 3px solid #9ac3fe;
+}
+
+QComboBox::drop-down {
+  border: 0px;
+}
+QComboBox::down-arrow {
+  image: url(icons/Arrow\ Down\ Icon.svg);
+  width: 10px;
+  height: 10px;
+}
+
+QComboBox:item {
+    padding-left: 20px;  /* move text right to make room for tick mark */
+    height: 20px;
+}
+QComboBox:item:selected {
+    padding-left: 20px;  /* move text right to make room for tick mark */
+    border: 2px solid #0d6efd;
+}
+QComboBox:item:checked {
+    padding-left: 20px;  /* move text right to make room for tick mark */
+    font-weight: bold;
+}
+

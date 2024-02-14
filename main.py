@@ -21,6 +21,7 @@ from analysis_methods.just_plot import just_plot
 from analysis_methods.additive_method import additive_method
 from analysis_methods.arima import arima
 from analysis_methods.ETS_model import ETS_model
+from analysis_methods.xmeans import xmeans
 
 
 class DataAnalyzerApp(QWidget):
