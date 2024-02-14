@@ -20,38 +20,58 @@ def ETS_model(df, column_name):
     elif "date" in df.columns:  # 1日ごとの場合
         xlabel_name = "date"
         df["index"] = pd.to_datetime(df['date'])
-        df.set_index("index", inplace=True)  # 日付をインデックスに設定
+        df.set_index("index", inplace=True)
         data = df[column_name].dropna()  # NaNの行を削除
         num = 7
     
     else:
-        # どの条件にも該当しない場合は、適切な処理を行う（例えばエラーメッセージを表示するなど）
+        # どの条件にも該当しない場合
         raise ValueError("適切な列が見つかりません。")
 
     # ETSモデルの構築
     ETS_model = ETSModel(data, error="add", trend="add", seasonal="add", seasonal_periods=num)
     ETS_fit = ETS_model.fit()
 
-    # 予測結果の取得
-    if xlabel_name == "Year":
-        pred_end = len(data) + len(data)//3 # サンプル内+1/3予測
+    # # ETS_fitオブジェクトからモデルオブジェクトを取得
+    # model = ETS_fit.model
+    # # モデルオブジェクトのインデックス関連の属性を調査
+    # print("属性：",model._index)
+    # print("T/F：", model._index_generated)
 
-    else:
-        pred_end = data.index[-1] + pd.DateOffset(day=31)
-        if pred_end not in data.index:
-            pred_end = data.index[-1] # サンプル内予測
-    print(pred_end)
-    pred = ETS_fit.get_prediction(start=data.index[0], end=pred_end)
+    # 予測結果の取得
+    pred_start = data.index[0]
+    pred_end = pred_start + pd.DateOffset(days=len(data) + len(data) // 3)
+    # pred_index = pd.Index(pred_index)
+    # pred_index = pd.date_range(start=pred_start, periods=len(data) + len(data) // 3, freq=pd.infer_freq(data.index))
+    pred = ETS_fit.get_prediction(start=pred_start, end=len(data) + len(data)//3)
     df_pred = pred.summary_frame(alpha=0.05)
     print(df_pred)
+
+    ## 旧
+    # if xlabel_name == "Year":
+    #     pred_end = len(data) + len(data)//3 # サンプル内+1/3予測
+
+    # else:
+    #     # pred_end = data.index[-1] + pd.DateOffset(day=31)
+    #     if pred_end not in data.index:
+    #         pred_end = data.index[-1] # サンプル内予測
+
+    # pred = ETS_fit.get_prediction(start=data.index[0], end=pred_end)
+    # df_pred = pred.summary_frame(alpha=0.05)
+    
     
     # 可視化
     fig, ax = plt.subplots(figsize=(10, 6))
     ## 95%信頼区間表示
+    if xlabel_name == "date":
+        pred_index = pd.date_range(start=pred_start, end=pred_end) 
+        df_pred.index = pred_index
+        data.plot(label="data", color='#ff7f0e', zorder=5)
     df_pred["mean"].plot(label="mean prediction")
     df_pred["pi_lower"].plot(linestyle="--", color="tab:blue", label="95% interval")
     df_pred["pi_upper"].plot(linestyle="--", color="tab:blue", label="_")
-    pred.endog.plot(label="data")
+    if xlabel_name == "Year":
+        pred.endog.plot(label="data")
     plt.axhline(y=0, xmin=0, xmax=3000, color="black", linewidth=1)
     ax.ticklabel_format(style="plain", axis="y")  # 指数表記から普通の表記に変換
     plt.xlabel(xlabel_name)
@@ -59,4 +79,3 @@ def ETS_model(df, column_name):
     ax.legend()
 
     return fig
-
