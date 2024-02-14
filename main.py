@@ -48,7 +48,7 @@ class DataAnalyzerApp(QWidget):
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
         self.method_combobox.addItems(
-            ["Just Plot", "Additive method", "Arima method", "ETS model"]
+            ["Just Plot", "Additive method", "Arima method", "ETS model", "X-means"]
         )
         self.plot_widget = None
 
