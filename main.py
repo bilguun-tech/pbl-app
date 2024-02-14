@@ -60,6 +60,7 @@ class DataAnalyzerApp(QWidget):
         self.start_analysis_button = QPushButton("Start Analysis", self)
         self.start_analysis_button.clicked.connect(self.start_analysis)
 
+<<<<<<< HEAD
         # QLabel to display the graph
         self.graph1_label = QLabel(self)
 
@@ -71,11 +72,24 @@ class DataAnalyzerApp(QWidget):
         top_layout.addWidget(heading)
         main_layout.addLayout(top_layout)
 
+=======
+        # Main layout setup
+        main_layout = QVBoxLayout(self)
+
+        # Top layout for heading
+        top_layout = QVBoxLayout()
+        top_layout.addWidget(heading)
+        main_layout.addLayout(top_layout)
+
+>>>>>>> cbd5381 (Fix ui)
         # Bottom layout for file import, method selection, and analysis button
         bottom_layout = QHBoxLayout()
         # Left side layout for graphs
         left_layout = QVBoxLayout()
+<<<<<<< HEAD
         left_layout.addWidget(self.graph1_label)
+=======
+>>>>>>> cbd5381 (Fix ui)
         bottom_layout.addLayout(left_layout)
         # Right side layout for file import, method selection, and analysis button
         right_layout = QVBoxLayout()
