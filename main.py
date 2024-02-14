@@ -11,6 +11,8 @@ from PyQt5.QtWidgets import (
     QFileDialog,
     QComboBox,
 )
+from PyQt5.QtCore import Qt
+
 from PyQt5.QtGui import QImage, QPixmap
 from pathlib import Path
 
@@ -167,7 +169,7 @@ class DataAnalyzerApp(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setStyleSheet(Path("style.qss").read_text())
+    app.setStyleSheet(Path("styles.qss").read_text())
 
     window = DataAnalyzerApp()
     window.show()
