@@ -3,22 +3,9 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 def additive_method(df, column_name):
     df["date"] = df.iloc[:, 0]
     df = df[[column_name, "date"]]
-=======
-def additive_method(data, column_name):
-    # amazonの株価（全期間）を加法モデルで分解
-    df = pd.DataFrame(data)
-    df = df[["date", column_name]]
->>>>>>> 458c1f0 (Fix additive method)
-=======
-def additive_method(df, column_name):
-    df["date"] = df.iloc[:, 0]
-    df = df[[column_name, "date"]]
->>>>>>> 9e33400 (delete unnecessary datasets and improve arima and additive method source)
     df.set_index("date", inplace=True)
     # print(df.head())
 
