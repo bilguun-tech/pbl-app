@@ -21,7 +21,6 @@ from analysis_methods.just_plot import just_plot
 from analysis_methods.additive_method import additive_method
 from analysis_methods.arima import arima
 from analysis_methods.ETS_model import ETS_model
-from analysis_methods.xmeans import xmeans
 
 
 class DataAnalyzerApp(QWidget):
@@ -48,7 +47,7 @@ class DataAnalyzerApp(QWidget):
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
         self.method_combobox.addItems(
-            ["Just Plot", "Additive method", "Arima method", "ETS model", "X-means"]
+            ["Just Plot", "Additive method", "Arima method", "ETS model"]
         )
         self.plot_widget = None
 
@@ -60,10 +59,6 @@ class DataAnalyzerApp(QWidget):
         self.start_analysis_button = QPushButton("Start Analysis", self)
         self.start_analysis_button.clicked.connect(self.start_analysis)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c11e4b5 (Complete style)
         # QLabel to display the graph
         self.graph1_label = QLabel(self)
 
@@ -75,28 +70,11 @@ class DataAnalyzerApp(QWidget):
         top_layout.addWidget(heading)
         main_layout.addLayout(top_layout)
 
-=======
-        # Main layout setup
-        main_layout = QVBoxLayout(self)
-
-        # Top layout for heading
-        top_layout = QVBoxLayout()
-        top_layout.addWidget(heading)
-        main_layout.addLayout(top_layout)
-
->>>>>>> cbd5381 (Fix ui)
         # Bottom layout for file import, method selection, and analysis button
         bottom_layout = QHBoxLayout()
         # Left side layout for graphs
         left_layout = QVBoxLayout()
-<<<<<<< HEAD
-<<<<<<< HEAD
         left_layout.addWidget(self.graph1_label)
-=======
->>>>>>> cbd5381 (Fix ui)
-=======
-        left_layout.addWidget(self.graph1_label)
->>>>>>> c11e4b5 (Complete style)
         bottom_layout.addLayout(left_layout)
         # Right side layout for file import, method selection, and analysis button
         right_layout = QVBoxLayout()
@@ -195,15 +173,7 @@ class DataAnalyzerApp(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-<<<<<<< HEAD
-<<<<<<< HEAD
     app.setStyleSheet(Path("styles.qss").read_text())
-=======
-    app.setStyleSheet(Path("style.qss").read_text())
->>>>>>> b713113 (Added styles.qss)
-=======
-    app.setStyleSheet(Path("styles.qss").read_text())
->>>>>>> b8908fb (Add pyqt core import)
 
     window = DataAnalyzerApp()
     window.show()
