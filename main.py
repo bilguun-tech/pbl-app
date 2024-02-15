@@ -157,7 +157,6 @@ class DataAnalyzerApp(QWidget):
 
         if analysis_method:
             # Perform analysis directly in the main thread
-            print(self.selected_dataset, selected_column)
             plot = analysis_method(self.selected_dataset, selected_column)
             self.analysis_complete(plot)
 
