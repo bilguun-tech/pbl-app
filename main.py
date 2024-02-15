@@ -133,7 +133,7 @@ class DataAnalyzerApp(QWidget):
             self.selected_dataset = self.data
         elif index == 1:
             self.column_combobox.clear()
-            self.column_combobox.addItems(self.clustered_data.columns[1:])
+            self.column_combobox.addItems(self.clustered_data.columns[0:])
             self.selected_dataset = self.clustered_data
         else:
             self.column_combobox.clear()
@@ -157,6 +157,7 @@ class DataAnalyzerApp(QWidget):
 
         if analysis_method:
             # Perform analysis directly in the main thread
+            print(self.selected_dataset, selected_column)
             plot = analysis_method(self.selected_dataset, selected_column)
             self.analysis_complete(plot)
 

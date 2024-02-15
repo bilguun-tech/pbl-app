@@ -6,7 +6,7 @@ def just_plot(data, column_name):
     # value = data[column_name]
     # 前処理
     x_label = data.columns[0]
-    data.set_index(data.iloc[:, 0], inplace=True)
+    # data.set_index(data.iloc[:, 0], inplace=True)
     data = data[column_name].dropna()  # NaNの行を削除
 
     # 可視化

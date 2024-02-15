@@ -65,6 +65,6 @@ def arima(df, column_name):
         axs.set_ylabel("Amazon stock price", fontname="MS Gothic")
         axs.legend(prop={"family": "MS Gothic"})
 
-        # axs.set_title('Prediction', fontname="MS Gothic")
+        axs.set_title("Prediction", fontname="MS Gothic")
 
         return fig
