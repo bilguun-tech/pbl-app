@@ -57,6 +57,16 @@ def xmeans(data, name):
     for value in grouped.T.columns:
         axs.plot(grouped.T.index, grouped.T[value], label=str(value)+'('+str(labels_xmeans[index])+')', color=cmap(labels_xmeans[index]))
         index += 1
+
+
+    # クラスタリング結果の可視化
+    #plt.figure()
+    #for cluster_idx in range(n_clusters):
+    #    for series_idx in range(len(labels_xmeans)):
+    #        if labels_xmeans[series_idx] == cluster_idx:
+    #            plt.plot(grouped[series_idx].ravel(), "k-", alpha=0.7)
+    #    plt.plot(xmeans.cluster_centers_[cluster_idx].ravel(), "r-")
+
     fig.autofmt_xdate()  # 日付が重ならないようにフォーマットを調整
 
     axs.set_title(f'Clustering (Number of Clusters: {best_n_clusters})')
