@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 
 
-def additive_method(df, column_name):
+def additive_method(original_df, column_name):
+    df = original_df.copy()
     df["date"] = df.iloc[:, 0]
     df = df[[column_name, "date"]]
     df.set_index("date", inplace=True)

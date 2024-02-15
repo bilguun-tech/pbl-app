@@ -7,11 +7,12 @@ from sklearn.cluster import KMeans
 from kneed import KneeLocator
 
 
-def cluster(df):
+def cluster(original_df):
     # X-means法（エルボー法＝分散の減少率が急激に小さくなる点をクラスタ数に設定）
 
     # データ読み込み（日付を解釈してインデックスに設定する）
     # df = pd.read_csv(csv_file, encoding="utf-8", parse_dates=["date"], index_col="date")
+    df = original_df.copy()
     df["date"] = pd.to_datetime(df["date"])
     df.set_index("date", inplace=True)
 
@@ -102,10 +103,11 @@ def cluster(df):
     ax.legend(
         loc="upper center",
         bbox_to_anchor=(0.5, -0.05),
-        prop={"size": 7, "family": "MS Gothic"},
+        prop={"size": 7},
         ncol=10,
     )
     ax.axes.xaxis.set_ticks([])
     plt.tight_layout()
+    cluster_centers_df.reset_index(inplace=True)  # Reset the index
 
     return cluster_centers_df, fig

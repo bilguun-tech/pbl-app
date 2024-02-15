@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.exponential_smoothing.ets import ETSModel
 
 
-def ETS_model(df, name):
+def ETS_model(original_df, name):
+    df = original_df.copy()
     # 準備
     if "年" in df.columns:  # 年ごとのデータの場合
         xlabel_name = "Year"
@@ -31,9 +32,11 @@ def ETS_model(df, name):
 
     # 予測結果の取得
     # pred = ETS_fit.get_prediction(start = data.index[0], end = data.index[-1]) # サンプル内予測
-    pred = ETS_fit.get_prediction(start = data.index[0], end = len(data)+len(data)//3) # サンプル+1/3予測
+    pred = ETS_fit.get_prediction(
+        start=data.index[0], end=len(data) + len(data) // 3
+    )  # サンプル+1/3予測
     df_pred = pred.summary_frame(alpha=0.05)
-    
+
     # 可視化
     fig, ax = plt.subplots(figsize=(10, 6))
     ## 95%信頼区間表示

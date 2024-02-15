@@ -4,7 +4,9 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.arima.model import ARIMA
 
 
-def arima(df, column_name):
+def arima(original_df, column_name):
+    df = original_df.copy()
+
     df["date"] = df.iloc[:, 0]
     df = df[[column_name, "date"]]
     df.set_index("date", inplace=True)
@@ -60,11 +62,11 @@ def arima(df, column_name):
         axs.plot(test_data, color="Red", label="Measured")
         # 予測値の描画
         axs.plot(model_predictions, color="Blue", label="Prediction")
-        axs.set_title(" ARIMA model", fontname="MS Gothic")
-        axs.set_xlabel("Date", fontname="MS Gothic")
-        axs.set_ylabel("Amazon stock price", fontname="MS Gothic")
-        axs.legend(prop={"family": "MS Gothic"})
+        axs.set_title(" ARIMA model")
+        axs.set_xlabel("Date")
+        axs.set_ylabel("Amazon stock price")
+        # axs.legend(prop={"family": "MS Gothic"})
 
-        axs.set_title("Prediction", fontname="MS Gothic")
+        axs.set_title("Prediction")
 
         return fig
