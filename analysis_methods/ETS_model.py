@@ -8,20 +8,21 @@ from pandas.tseries.offsets import DateOffset
 def ETS_model(df, column_name):
     xlabel_name = df.columns[0]
     # 準備
-    if "年" in df.columns:  # 年ごとのデータの場合
+    if xlabel_name == "年":  # 年ごとのデータの場合
         xlabel_name = "Year"
         df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
+        df.set_index("index", inplace=True)
+        data = df[column_name].dropna()  # NaNの行を削除
         if len(data) >= 24:
             num = 12
         else:
             num = len(data) // 2
 
-    elif "date" in df.columns:  # 1日ごとの場合
+    elif xlabel_name == "date":  # 1日ごとの場合
         df["index"] = pd.to_datetime(df['date'])
+        df.set_index("index", inplace=True)
+        data = df[column_name].dropna()  # NaNの行を削除
         num = 7
-
-    df.set_index("index", inplace=True)
-    data = df[column_name].dropna()  # NaNの行を削除
 
     # ETSモデルの構築
     ETS_model = ETSModel(data, error="add", trend="add", seasonal="add", seasonal_periods=num)

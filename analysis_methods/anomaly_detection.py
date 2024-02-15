@@ -7,17 +7,15 @@ import matplotlib.pyplot as plt
 
 def anomaly_detection(df, column_name):
     xlabel_name = df.columns[0]
-    if "date" in df.columns:  # 1日ごとの場合
+    if xlabel_name == "date":  # 1日ごとの場合
         df[xlabel_name] = pd.to_datetime(df[xlabel_name])
         xlim_start = df.iloc[0,0]
         # # 日付データをエポック秒に変換（RCFを使う時には整数値でないといけない）
         df[xlabel_name] = (df[xlabel_name] - pd.Timestamp(xlim_start)) // pd.Timedelta('1s')
-        print(df)
-    
-    elif "年" in df.columns:  # 年ごとの場合
+
+    else:
         df[xlabel_name] = df.iloc[:, 0]
 
-    print("x:",xlabel_name)
     # # 欠損値を処理（均値で置換）
     data = df.fillna(df.mean())
 

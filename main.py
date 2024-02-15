@@ -25,7 +25,6 @@ from analysis_methods.cluster import cluster
 from analysis_methods.LLR import LLR
 from analysis_methods.anomaly_detection import anomaly_detection
 
-
 class DataAnalyzerApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -125,13 +124,12 @@ class DataAnalyzerApp(QWidget):
                 self.clustered_data, plot = cluster(self.data)
                 self.show_matplotlib_plot(plot)
 
-                # Populate the column combobox
+               # Populate the column combobox
                 self.populate_column_combobox(self.mode_combobox.currentIndex())
 
             except Exception as e:
                 # Handle any potential errors during reading the CSV file
                 print(f"Error reading CSV file: {e}")
-
 
     def populate_column_combobox(self, index):
         if index == 2:
@@ -151,7 +149,7 @@ class DataAnalyzerApp(QWidget):
         # Get the selected analysis method and column name from the combobox
         selected_method = self.method_combobox.currentText()
         selected_column = self.column_combobox.currentText()
-
+        
         # Reset index
         self.data.reset_index(drop=True, inplace=True)
 
@@ -164,7 +162,6 @@ class DataAnalyzerApp(QWidget):
             "Local Linear Regression":LLR,
             "Anomaly Detection":anomaly_detection
         }
-
 
         analysis_method = method_mapping.get(selected_method)
 

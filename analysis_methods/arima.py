@@ -7,11 +7,12 @@ from statsmodels.tsa.arima.model import ARIMA
 
 
 def arima(df, column_name):
-    if "年" in df.columns:  # 年ごとのデータの場合
+    xlabel_name = df.columns[0]
+    if xlabel_name == "年":  # 年ごとのデータの場合
         xlabel_name = "Year"
         df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
         
-    elif "date" in df.columns:  # 1日ごとの場合
+    elif xlabel_name == "date":  # 1日ごとの場合
         xlabel_name = "date"
         df["index"] = pd.to_datetime(df['date'])
 
