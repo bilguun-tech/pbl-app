@@ -2,11 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def xmeans(csv_file):
-#!/usr/bin/env python
-# coding: utf-8
+def xmeans(data, name):
+    #!/usr/bin/env python
+    # coding: utf-8
 
-#X-means法（エルボー法＝分散の減少率が急激に小さくなる点をクラスタ数に設定）
+    #X-means法（エルボー法＝分散の減少率が急激に小さくなる点をクラスタ数に設定）
 
     import pandas as pd
     import numpy as np
@@ -17,7 +17,8 @@ def xmeans(csv_file):
     from kneed import KneeLocator
 
     # データ読み込み（日付を解釈してインデックスに設定する）
-    df = pd.read_csv(csv_file,encoding='utf-8', parse_dates=['date'], index_col='date')
+    df = data
+    #df = pd.read_csv(csv_file,encoding='utf-8', parse_dates=['date'], index_col='date')
 
     # 欠損値を処理（均値で置換）
     df = df.fillna(df.mean())

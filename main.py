@@ -21,6 +21,7 @@ from analysis_methods.just_plot import just_plot
 from analysis_methods.additive_method import additive_method
 from analysis_methods.arima import arima
 from analysis_methods.ETS_model import ETS_model
+from analysis_methods.xmeans import xmeans
 
 
 class DataAnalyzerApp(QWidget):
@@ -47,7 +48,7 @@ class DataAnalyzerApp(QWidget):
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
         self.method_combobox.addItems(
-            ["Just Plot", "Additive method", "Arima method", "ETS model"]
+            ["Just Plot", "Additive method", "Arima method", "ETS model","xmeans"]
         )
         self.plot_widget = None
 
@@ -128,6 +129,7 @@ class DataAnalyzerApp(QWidget):
             "Additive method": additive_method,
             "Arima method": arima,
             "ETS model": ETS_model,
+            "xmeans": xmeans
         }
 
         analysis_method = method_mapping.get(selected_method)
