@@ -40,13 +40,13 @@ def just_plot(df, column_name):
         plt.subplot(2,1,1)
         plt.plot(data)
         plt.gca().xaxis.set_major_locator(plt.MaxNLocator(5))
-        plt.xlabel(x_label, fontname="MS Gothic")
+        plt.xlabel(x_label)
         plt.title("Just Plot")
 
         plt.subplot(2,1,2)
         subset_data.plot(kind='bar', width=0.5)  # 棒グラフで表示
         plt.xticks(reset_filtered_data.index, filtered_data.index.tolist())  # X軸の目盛りを設定
-        plt.xlabel(x_label, fontname="MS Gothic")
+        plt.xlabel(x_label)
         plt.title("Subset Plot")
 
     else:  

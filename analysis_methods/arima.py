@@ -68,8 +68,8 @@ def arima(original_df, column_name):
         # 予測値の描画
         pd.Series(model_predictions).plot(color="Blue", label="Prediction")
         axs.set_title("ARIMA model")
-        axs.set_xlabel(xlabel_name, fontname="MS Gothic")
+        axs.set_xlabel(xlabel_name)
         # axs.set_ylabel("Stock Price")
-        axs.legend(prop={"family": "MS Gothic"})
+        axs.legend()
 
         return fig

@@ -99,12 +99,12 @@ def cluster(original_df):
 
     fig.autofmt_xdate()  # 日付が重ならないようにフォーマットを調整
     ax.set_title(f"Clustering (Number of Cluster: {best_n_clusters})")
-    ax.set_xlabel(xlabel_name, loc="right", fontname="MS Gothic")
+    ax.set_xlabel(xlabel_name, loc="right")
     ax.set_ylabel("Value", loc="top")
     ax.legend(
         loc="upper center",
         bbox_to_anchor=(0.5, -0.05),
-        prop={"size": 7, "family": "MS Gothic"},
+        prop={"size": 7},
         ncol=10,
     )
 

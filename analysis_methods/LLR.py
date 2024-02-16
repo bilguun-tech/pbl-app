@@ -57,7 +57,7 @@ def LLR(original_df, column_name):
         # ax.xaxis.set_major_formatter(date_format)
         fig.autofmt_xdate()  # 日付が重ならないようにフォーマットを調整
 
-        plt.xlabel(xlabel_name, fontname="MS Gothic")
+        plt.xlabel(xlabel_name)
         plt.ticklabel_format(style="plain", axis="y")  # 指数表記から普通の表記に変換
         plt.legend()
         # x軸の範囲を指定
