@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.exponential_smoothing.ets import ETSModel
 from pandas.tseries.offsets import DateOffset
 
-def ETS_model(df, column_name):
+def ETS_model(original_df, column_name):
+    df = original_df.copy()
     xlabel_name = df.columns[0]
     # 準備
     if xlabel_name == "年":  # 年ごとのデータの場合

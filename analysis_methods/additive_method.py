@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 
 
-def additive_method(df, column_name):
+def additive_method(original_df, column_name):
+    df = original_df.copy()
     xlabel_name = df.columns[0]
     if xlabel_name == "date":  # 1日ごとの場合
         df["index"] = pd.to_datetime(df['date'])

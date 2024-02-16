@@ -5,7 +5,8 @@ import numpy as np
 from sklearn.ensemble import IsolationForest
 import matplotlib.pyplot as plt
 
-def anomaly_detection(df, column_name):
+def anomaly_detection(original_df, column_name):
+    df = original_df.copy()
     xlabel_name = df.columns[0]
     if xlabel_name == "date":  # 1日ごとの場合
         df[xlabel_name] = pd.to_datetime(df[xlabel_name])

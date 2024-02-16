@@ -6,7 +6,8 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.arima.model import ARIMA
 
 
-def arima(df, column_name):
+def arima(original_df, column_name):
+    df = original_df.copy()
     xlabel_name = df.columns[0]
     if xlabel_name == "年":  # 年ごとのデータの場合
         xlabel_name = "Year"
