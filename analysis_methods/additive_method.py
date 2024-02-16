@@ -9,7 +9,15 @@ def additive_method(df, column_name):
     xlabel_name = df.columns[0]
     if xlabel_name == "date":  # 1日ごとの場合
         df["index"] = pd.to_datetime(df['date'])
-        num = 30 # 30日周期 
+        num = 30 # 30日周期
+
+    if xlabel_name == "年":  # 年ごとのデータの場合
+        xlabel_name = "Year"
+        df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
+        df.set_index("index", inplace=True)
+        data = df[column_name].dropna()  # NaNの行を削除
+        num = 12
+
     else:
         df["index"] = pd.DataFrame(df.iloc[:, 0])
         # df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
