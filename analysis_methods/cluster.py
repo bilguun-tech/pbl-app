@@ -1,3 +1,5 @@
+# X-means法（エルボー法＝分散の減少率が急激に小さくなる点をクラスタ数に設定）
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,18 +10,21 @@ from kneed import KneeLocator
 
 
 def cluster(original_df):
-    # X-means法（エルボー法＝分散の減少率が急激に小さくなる点をクラスタ数に設定）
-
-    # データ読み込み（日付を解釈してインデックスに設定する）
-    # df = pd.read_csv(csv_file, encoding="utf-8", parse_dates=["date"], index_col="date")
     df = original_df.copy()
-    df["date"] = pd.to_datetime(df["date"])
-    df.set_index("date", inplace=True)
+    xlabel_name = df.columns[0]
+    if xlabel_name == "年":  # 年ごとのデータの場合
+        # df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
+        df[xlabel_name] = df.iloc[:, 0]
+        
+    elif xlabel_name == "date":  # 1日ごとの場合
+        df[xlabel_name] = pd.to_datetime(df[xlabel_name])
 
-    # 欠損値を処理（均値で置換）
-    df = df.fillna(df.mean())
+    df.set_index(xlabel_name, inplace=True)
+    # # 欠損値を処理（均値で置換）
+    data = df.fillna(df.mean())
+
     # 商品名を行、日付を列に持つデータセットに変換
-    grouped = df.T
+    grouped = data.T
 
     # tslearn用のデータセットに変換
     time_np = to_time_series_dataset(grouped)
@@ -64,19 +69,18 @@ def cluster(original_df):
 
     # クラスタ中心のデータを保存するDataFrame
     cluster_centers_df = pd.DataFrame(index=grouped.T.index)
-    # DataFrameに 'date' をインデックスとして設定
-    cluster_centers_df["date"] = grouped.T.index
-    cluster_centers_df.set_index("date", inplace=True)
+    # DataFrameに xlabel_name をインデックスとして設定
+    cluster_centers_df[xlabel_name] = grouped.T.index
+    cluster_centers_df.set_index(xlabel_name, inplace=True)
     for i in range(best_n_clusters):
         cluster_indices = np.where(labels_xmeans == i)[0]
         # クラスタ中心のデータをDataFrameに追加
         cluster_centers_df[f"Cluster{i} "] = xmeans.cluster_centers_[i].ravel()
-
         # クラスタ中心のみ描画（色を変更）
         ax.plot(
             grouped.T.index,
             xmeans.cluster_centers_[i].ravel(),
-            label=f"クラスタ {i} 中心",
+            label=f"クラスタ {i}",
             linewidth=2,
             color=cmap(i),
         )
@@ -93,12 +97,9 @@ def cluster(original_df):
     # 列名に含まれている空白を削除する
     cluster_centers_df.columns = cluster_centers_df.columns.str.replace(" ", "")
 
-    # DataFrameをCSVファイルに保存
-    # cluster_centers_df.to_csv('cluster_centers_data.csv')
-
     fig.autofmt_xdate()  # 日付が重ならないようにフォーマットを調整
     ax.set_title(f"Clustering (Number of Cluster: {best_n_clusters})")
-    ax.set_xlabel("Date", loc="right")
+    ax.set_xlabel(xlabel_name, loc="right", fontname="MS Gothic")
     ax.set_ylabel("Value", loc="top")
     ax.legend(
         loc="upper center",
@@ -106,8 +107,12 @@ def cluster(original_df):
         prop={"size": 7},
         ncol=10,
     )
-    ax.axes.xaxis.set_ticks([])
+
+    ax.ticklabel_format(style="plain", axis="y")  # 指数表記から普通の表記に変換
+    plt.gca().xaxis.set_major_locator(plt.MaxNLocator(7))
+    # ax.xaxis.set_ticks([])
     plt.tight_layout()
     cluster_centers_df.reset_index(inplace=True)  # Reset the index
+    # print(cluster_centers_df)
 
     return cluster_centers_df, fig

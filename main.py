@@ -22,7 +22,8 @@ from analysis_methods.additive_method import additive_method
 from analysis_methods.arima import arima
 from analysis_methods.ETS_model import ETS_model
 from analysis_methods.cluster import cluster
-
+from analysis_methods.LLR import LLR
+from analysis_methods.anomaly_detection import anomaly_detection
 
 class DataAnalyzerApp(QWidget):
     def __init__(self):
@@ -55,7 +56,8 @@ class DataAnalyzerApp(QWidget):
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
         self.method_combobox.addItems(
-            ["Just Plot", "Additive method", "Arima method", "ETS model"]
+            ["Just Plot", "Additive method", "Arima method", "ETS model", "Local Linear Regression",
+            "Anomaly Detection"]
         )
         self.plot_widget = None
 
@@ -122,6 +124,9 @@ class DataAnalyzerApp(QWidget):
                 self.clustered_data, plot = cluster(self.data)
                 self.show_matplotlib_plot(plot)
 
+               # Populate the column combobox
+                self.populate_column_combobox(self.mode_combobox.currentIndex())
+
             except Exception as e:
                 # Handle any potential errors during reading the CSV file
                 print(f"Error reading CSV file: {e}")
@@ -144,6 +149,9 @@ class DataAnalyzerApp(QWidget):
         # Get the selected analysis method and column name from the combobox
         selected_method = self.method_combobox.currentText()
         selected_column = self.column_combobox.currentText()
+        
+        # Reset index
+        self.data.reset_index(drop=True, inplace=True)
 
         # Map the selected method to the corresponding function
         method_mapping = {
@@ -151,6 +159,8 @@ class DataAnalyzerApp(QWidget):
             "Additive method": additive_method,
             "Arima method": arima,
             "ETS model": ETS_model,
+            "Local Linear Regression":LLR,
+            "Anomaly Detection":anomaly_detection
         }
 
         analysis_method = method_mapping.get(selected_method)
