@@ -10,7 +10,13 @@ def additive_method(original_df, column_name):
     xlabel_name = df.columns[0]
     if xlabel_name == "date":  # 1日ごとの場合
         df["index"] = pd.to_datetime(df['date'])
-        num = 30 # 30日周期 
+        num = 30 # 30日周期
+
+    elif xlabel_name == "年":  # 年ごとのデータの場合（tourist）
+        xlabel_name = "Year"
+        df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
+        num = 4 # 10年周期（2以上ならOK）
+ 
     else:
         df["index"] = pd.DataFrame(df.iloc[:, 0])
         # df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
