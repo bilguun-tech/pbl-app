@@ -14,9 +14,7 @@ def additive_method(df, column_name):
     elif xlabel_name == "年":  # 年ごとのデータの場合（tourist）
         xlabel_name = "Year"
         df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
-        #df.set_index("index", inplace=True)
-        #data = df[column_name].dropna()  # NaNの行を削除
-        num = 12
+        num = 4 # 10年周期（2以上ならOK）
 
     else:
         df["index"] = pd.DataFrame(df.iloc[:, 0])#（トラフィック）
