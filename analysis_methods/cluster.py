@@ -15,7 +15,7 @@ def cluster(original_df):
     if xlabel_name == "年":  # 年ごとのデータの場合
         # df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
         df[xlabel_name] = df.iloc[:, 0]
-        
+
     elif xlabel_name == "date":  # 1日ごとの場合
         df[xlabel_name] = pd.to_datetime(df[xlabel_name])
 

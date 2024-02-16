@@ -12,10 +12,10 @@ def arima(original_df, column_name):
     if xlabel_name == "年":  # 年ごとのデータの場合
         xlabel_name = "Year"
         df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
-        
+
     elif xlabel_name == "date":  # 1日ごとの場合
         xlabel_name = "date"
-        df["index"] = pd.to_datetime(df['date'])
+        df["index"] = pd.to_datetime(df["date"])
 
     df.set_index("index", inplace=True)
     data = df[column_name].dropna()  # NaNの行を削除
@@ -35,7 +35,10 @@ def arima(original_df, column_name):
     else:
         print("データは定常過程ではありません")
         # ARIMAモデル データ準備
-        train_data, test_data = data[0 : int(len(data) * 0.7)], data[int(len(data) * 0.7) :]
+        train_data, test_data = (
+            data[0 : int(len(data) * 0.7)],
+            data[int(len(data) * 0.7) :],
+        )
         train_data = train_data.values
         test_data = test_data.values
 
@@ -60,7 +63,7 @@ def arima(original_df, column_name):
             # トレーニングデータの取り込み
             true_test_value = test_data[time_point]
             history.append(true_test_value)
-            
+
         # サブプロットの設定
         fig, axs = plt.subplots(figsize=(10, 6))
 
@@ -72,4 +75,5 @@ def arima(original_df, column_name):
         # axs.set_ylabel("Stock Price")
         axs.legend(prop={"family": "MS Gothic"})
 
-        return fig
+        error_msg = "No Error"
+        return fig, error_msg
