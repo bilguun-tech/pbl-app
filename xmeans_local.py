@@ -53,6 +53,8 @@ for value in grouped.T.columns:
 for cluster_idx in range(best_n_clusters):
    axs.plot(xmeans.cluster_centers_[cluster_idx].ravel(), color=cmap(cluster_idx))
 
+print(xmeans.cluster_centers_[0].ravel())
+
 
 fig.autofmt_xdate()  # 日付が重ならないようにフォーマットを調整
 axs.set_title(f'Clustering (Number of Clusters: {best_n_clusters})')
