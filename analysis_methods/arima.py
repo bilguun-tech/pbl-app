@@ -30,10 +30,9 @@ def arima(original_df, column_name):
 
     # プログラムのURL:https://toukei-lab.com/python_stock
     if dftest[1] <= 0.05:
-        print("p-value <= 0.05")
-        print("データは定常過程です")
+        msg = "The selected data set is a stationary process. Please select another analysis method. "
     else:
-        print("データは定常過程ではありません")
+        #print("データは定常過程ではありません")
         # ARIMAモデル データ準備
         train_data, test_data = data[0 : int(len(data) * 0.7)], data[int(len(data) * 0.7) :]
         train_data = train_data.values
@@ -43,7 +42,7 @@ def arima(original_df, column_name):
         # train_data = data["close"].values
         model = ARIMA(train_data, order=(6, 1, 0))
         model_fit = model.fit()
-        print(model_fit.summary())
+        #print(model_fit.summary())
 
         # ARIMAモデル 予測
         history = [x for x in train_data]
@@ -72,4 +71,4 @@ def arima(original_df, column_name):
         # axs.set_ylabel("Stock Price")
         axs.legend(prop={"family": "MS Gothic"})
 
-        return fig
+        return fig,msg
