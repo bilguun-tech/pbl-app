@@ -30,6 +30,7 @@ def arima(original_df, column_name):
 
     # プログラムのURL:https://toukei-lab.com/python_stock
     if dftest[1] <= 0.05:
+        fig, axs = plt.subplots(figsize=(10, 6))
         error_msg = "The selected data set is a stationary process. Please select another analysis method. "
     else:
         #print("データは定常過程ではありません")
@@ -75,4 +76,4 @@ def arima(original_df, column_name):
         axs.legend(prop={"family": "MS Gothic"})
 
         error_msg = "No Error"
-        return fig, error_msg
+    return fig, error_msg
