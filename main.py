@@ -138,7 +138,8 @@ class DataAnalyzerApp(QWidget):
         )
 
         if file_path:
-            self.file_label.setText(f"File: {file_path}")
+            file_name = Path(file_path).name
+            self.file_label.setText(f"File Name: {file_name}")
             # Read CSV file using pandas
             try:
                 # Store the data as an attribute
@@ -231,6 +232,9 @@ class DataAnalyzerApp(QWidget):
 
         return pixmap
 
+    def keyReleaseEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

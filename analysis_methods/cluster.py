@@ -21,10 +21,7 @@ def cluster(original_df):
         ax.set_title("Internet traffic grouped by usage type")
         ax.set_xlabel(xlabel_name, loc="right")
         ax.set_ylabel("Number of access", loc="top")
-        ax.legend(loc='upper left', bbox_to_anchor=(1.05, 1), prop={"size": 6})
-        ax.ticklabel_format(style="plain", axis="y")  # 指数表記から普通の表記に変換
-        plt.gca().xaxis.set_major_locator(plt.MaxNLocator(7))
-        plt.tight_layout()
+        ax.legend()
         return df, fig
 
     elif xlabel_name == "年":  # 年ごとのデータの場合
