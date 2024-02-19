@@ -71,4 +71,4 @@ def arima(original_df, column_name):
         # axs.set_ylabel("Stock Price")
         axs.legend(prop={"family": "MS Gothic"})
 
-        return fig,msg
+    return fig,msg
