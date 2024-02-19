@@ -12,22 +12,53 @@ from kneed import KneeLocator
 def cluster(original_df):
     df = original_df.copy()
     xlabel_name = df.columns[0]
+
     if xlabel_name == "hour":
         print("helloooooo")
-        fig, ax = plt.subplots(figsize=(10, 8))
+        fig, ax = plt.subplots(figsize=(12, 9))
         for column in df.columns[1:]:
             ax.plot(df["hour"], df[column], label=column)
         ax.set_title("Internet traffic grouped by usage type")
         ax.set_xlabel(xlabel_name, loc="right")
         ax.set_ylabel("Number of access", loc="top")
+        ax.legend(loc='upper left', bbox_to_anchor=(1.05, 1), prop={"size": 6})
+        ax.ticklabel_format(style="plain", axis="y")  # 指数表記から普通の表記に変換
+        plt.gca().xaxis.set_major_locator(plt.MaxNLocator(7))
+        plt.tight_layout()
         return df, fig
 
-    if xlabel_name == "年":  # 年ごとのデータの場合
+    elif xlabel_name == "年":  # 年ごとのデータの場合
         # df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
         df[xlabel_name] = df.iloc[:, 0]
 
     elif xlabel_name == "date":  # 1日ごとの場合
         df[xlabel_name] = pd.to_datetime(df[xlabel_name])
+
+    '''else:
+        df = df[["Timestamp", "Label.1", "Label", "hour"]]
+        # Convert the 'Timestamp' column to datetime
+        df["Timestamp"] = pd.to_datetime(df["Timestamp"])
+
+        fig, ax = plt.subplots(figsize=(12, 9))
+
+        df_grouped = df.groupby(["hour", "Label.1"]).size().unstack(fill_value=0)
+        df_grouped.plot(kind='line', linewidth=2.5, ax=ax)
+        fig.autofmt_xdate()  # 日付が重ならないようにフォーマットを調整
+
+        # タイトル、ラベル、凡例などの設定
+           # タイトルにラベル数を表示する
+        label_count = df["Label.1"].nunique()
+        ax.set_title(f"Clustering (Number of Cluster: {label_count})")
+        ax.set_xlabel(xlabel_name, loc="right", fontname="Yu Gothic")
+        ax.set_ylabel("Value", loc="top")
+        ax.legend(loc='upper left', bbox_to_anchor=(1.05, 1), prop={"size": 6, 'family': "Yu Gothic"})
+
+        ax.ticklabel_format(style="plain", axis="y")  # 指数表記から普通の表記に変換
+        plt.gca().xaxis.set_major_locator(plt.MaxNLocator(7))
+        plt.tight_layout()
+        #to_csv
+        df_grouped.to_csv("output_file.csv", index=True)
+        return df_grouped, fig'''
 
     df.set_index(xlabel_name, inplace=True)
     # # 欠損値を処理（均値で置換）
@@ -49,9 +80,9 @@ def cluster(original_df):
     for n_clusters in range(min_clusters, max_clusters + 1):
         kmeans = KMeans(n_clusters=n_clusters, random_state=0)
         kmeans.fit(grouped)
-        inertia_values.append(
-            kmeans.inertia_
-        )  # KneeLocatorを使用してエルボーの位置を自動で選択
+        inertia_values.append(kmeans.inertia_)
+
+    # KneeLocatorを使用してエルボーの位置を自動で選択
     kl = KneeLocator(
         range(min_clusters, max_clusters + 1),
         inertia_values,
@@ -75,7 +106,7 @@ def cluster(original_df):
     # クラスタリングの結果
     # グラフを描画
     cmap = plt.get_cmap("tab10")  # 色の指定
-    fig, ax = plt.subplots(figsize=(10, 8))
+    fig, ax = plt.subplots(figsize=(12, 9))
 
     # クラスタ中心のデータを保存するDataFrame
     cluster_centers_df = pd.DataFrame(index=grouped.T.index)
@@ -109,13 +140,10 @@ def cluster(original_df):
 
     fig.autofmt_xdate()  # 日付が重ならないようにフォーマットを調整
     ax.set_title(f"Clustering (Number of Cluster: {best_n_clusters})")
-    ax.set_xlabel(xlabel_name, loc="right", fontname="MS Gothic")
+    ax.set_xlabel(xlabel_name, loc="right", fontname="Yu Gothic")
     ax.set_ylabel("Value", loc="top")
     ax.legend(
-        loc="upper center",
-        bbox_to_anchor=(0.5, -0.05),
-        prop={"size": 7},
-        ncol=10,
+        loc='upper left', bbox_to_anchor=(1.05, 1), prop={"size": 6, 'family': "Yu Gothic"}, ncol=3,
     )
 
     ax.ticklabel_format(style="plain", axis="y")  # 指数表記から普通の表記に変換
@@ -126,3 +154,4 @@ def cluster(original_df):
     # print(cluster_centers_df)
 
     return cluster_centers_df, fig
+
