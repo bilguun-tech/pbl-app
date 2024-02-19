@@ -17,6 +17,7 @@ from PyQt5.QtGui import QImage, QPixmap
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import japanize_matplotlib
 from analysis_methods.just_plot import just_plot
 from analysis_methods.additive_method import additive_method
 from analysis_methods.arima import arima
