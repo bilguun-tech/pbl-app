@@ -30,10 +30,9 @@ def arima(original_df, column_name):
 
     # プログラムのURL:https://toukei-lab.com/python_stock
     if dftest[1] <= 0.05:
-        print("p-value <= 0.05")
-        print("データは定常過程です")
+        msg = "The selected data set is a stationary process. Please select another analysis method. "
     else:
-        print("データは定常過程ではありません")
+        #print("データは定常過程ではありません")
         # ARIMAモデル データ準備
         train_data, test_data = (
             data[0 : int(len(data) * 0.7)],
