@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtGui import QImage, QPixmap, QKeySequence
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -26,6 +26,7 @@ from analysis_methods.cluster import cluster
 from analysis_methods.LLR import LLR
 from analysis_methods.anomaly_detection import anomaly_detection
 
+
 class DataAnalyzerApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -34,7 +35,16 @@ class DataAnalyzerApp(QWidget):
 
     def init_ui(self):
         self.setWindowTitle("Data Analyzer")
-        self.setGeometry(100, 100, 800, 400)
+        self.showFullScreen()
+        # Get the screen dimensions
+        screen = app.primaryScreen()
+        screen_width = screen.size().width()
+        screen_height = screen.size().height()
+        # Calculate sizes based on a 7:3 ratio
+        total_width = screen_width
+        total_height = screen_height
+        graph_width = int(total_width * 0.7)  # 70% of the total width
+
         # Title label
         heading = QLabel("Data Analyzer", self)
         heading.setAlignment(Qt.AlignmentFlag.AlignHCenter)
@@ -57,11 +67,15 @@ class DataAnalyzerApp(QWidget):
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
         self.method_combobox.addItems(
-            ["Just Plot", "Additive method", "Arima method", "ETS model", "Local Linear Regression",
-            "Anomaly Detection"]
+            [
+                "Just Plot",
+                "Additive method",
+                "Arima method",
+                "ETS model",
+                "Local Linear Regression",
+                "Anomaly Detection",
+            ]
         )
-        self.plot_widget = None
-
         # Column name selection using QComboBox
         self.column_label = QLabel("Select Column Name:")
         self.column_combobox = QComboBox(self)
@@ -72,6 +86,12 @@ class DataAnalyzerApp(QWidget):
 
         # QLabel to display the graph
         self.graph1_label = QLabel(self)
+        self.graph1_label.setFixedSize(graph_width, total_height)
+
+        # QLabel to display system messages
+        self.error_msg_label = QLabel("System message:")
+        self.error_msg = QLabel("No message")
+        self.error_msg.setObjectName("error_msg")
 
         # Main layout setup
         main_layout = QVBoxLayout(self)
@@ -103,6 +123,9 @@ class DataAnalyzerApp(QWidget):
         right_layout.addStretch(1)
         right_layout.addWidget(self.start_analysis_button)
         right_layout.addStretch(1)
+        right_layout.addWidget(self.error_msg_label)
+        right_layout.addWidget(self.error_msg)
+        right_layout.addStretch(1)
         bottom_layout.addLayout(right_layout)
         main_layout.addLayout(bottom_layout)
 
@@ -115,7 +138,8 @@ class DataAnalyzerApp(QWidget):
         )
 
         if file_path:
-            self.file_label.setText(f"File: {file_path}")
+            file_name = Path(file_path).name
+            self.file_label.setText(f"File Name: {file_name}") # ファイルのパスが長いので、名前のみ表示
             # Read CSV file using pandas
             try:
                 # Store the data as an attribute
@@ -125,7 +149,7 @@ class DataAnalyzerApp(QWidget):
                 self.clustered_data, plot = cluster(self.data)
                 self.show_matplotlib_plot(plot)
 
-               # Populate the column combobox
+                # Populate the column combobox
                 self.populate_column_combobox(self.mode_combobox.currentIndex())
 
             except Exception as e:
@@ -150,7 +174,7 @@ class DataAnalyzerApp(QWidget):
         # Get the selected analysis method and column name from the combobox
         selected_method = self.method_combobox.currentText()
         selected_column = self.column_combobox.currentText()
-        
+
         # Reset index
         self.data.reset_index(drop=True, inplace=True)
 
@@ -160,15 +184,16 @@ class DataAnalyzerApp(QWidget):
             "Additive method": additive_method,
             "Arima method": arima,
             "ETS model": ETS_model,
-            "Local Linear Regression":LLR,
-            "Anomaly Detection":anomaly_detection
+            "Local Linear Regression": LLR,
+            "Anomaly Detection": anomaly_detection,
         }
 
         analysis_method = method_mapping.get(selected_method)
 
         if analysis_method:
             # Perform analysis directly in the main thread
-            plot = analysis_method(self.selected_dataset, selected_column)
+            plot, msg = analysis_method(self.selected_dataset, selected_column)
+            self.error_msg.setText(msg)
             self.analysis_complete(plot)
 
     def analysis_complete(self, plot):
@@ -204,6 +229,10 @@ class DataAnalyzerApp(QWidget):
 
         return pixmap
 
+    def keyReleaseEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            # Esc キーが押された場合には、ウィンドウを閉じる
+            self.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

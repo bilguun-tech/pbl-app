@@ -9,24 +9,24 @@ def additive_method(original_df, column_name):
     df = original_df.copy()
     xlabel_name = df.columns[0]
     if xlabel_name == "date":  # 1日ごとの場合
-        df["index"] = pd.to_datetime(df['date'])
-        num = 30 # 30日周期
+        df["index"] = pd.to_datetime(df["date"])
+        num = 30  # 30日周期
 
     elif xlabel_name == "年":  # 年ごとのデータの場合（tourist）
         xlabel_name = "Year"
         df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
-        num = 4 # 10年周期（2以上ならOK）
- 
+        num = 4  # 10年周期（2以上ならOK）
+
     else:
         df["index"] = pd.DataFrame(df.iloc[:, 0])
         # df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
-        num = 1 # 1周期
+        num = 1  # 1周期
 
     df.set_index("index", inplace=True)
     data = df[column_name].dropna()  # NaNの行を削除
 
     # 成分分解
-    result = seasonal_decompose(data, model="additive", period=num) #加法モデル
+    result = seasonal_decompose(data, model="additive", period=num)  # 加法モデル
     # result=seasonal_decompose(df, model='multiplicative', period=num) #乗法モデル
 
     # グラフのサイズを設定
@@ -58,8 +58,9 @@ def additive_method(original_df, column_name):
 
     # 横軸（時間軸）の目盛りを1ヶ月ごとに設定
     # plt.gca().xaxis.set_major_locator(plt.MaxNLocator(12))
-    
+
     # グラフを表示
     plt.tight_layout()
     fig = plt.gcf()  # 現在のFigureを取得
-    return fig
+    error_msg = "No Error"
+    return fig, error_msg
