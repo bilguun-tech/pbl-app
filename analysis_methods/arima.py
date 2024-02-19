@@ -31,6 +31,7 @@ def arima(original_df, column_name):
     # プログラムのURL:https://toukei-lab.com/python_stock
     if dftest[1] <= 0.05:
         msg = "The selected data set is a stationary process. Please select another analysis method. "
+        fig = None
     else:
         # print("データは定常過程ではありません")
         # ARIMAモデル データ準備
@@ -73,4 +74,5 @@ def arima(original_df, column_name):
         axs.set_xlabel(xlabel_name, fontname="MS Gothic")
         # axs.set_ylabel("Stock Price")
         axs.legend(prop={"family": "MS Gothic"})
+        msg = "Successfully predicted the future value using the ARIMA model."
     return fig, msg

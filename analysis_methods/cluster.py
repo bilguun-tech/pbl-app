@@ -12,6 +12,16 @@ from kneed import KneeLocator
 def cluster(original_df):
     df = original_df.copy()
     xlabel_name = df.columns[0]
+    if xlabel_name == "hour":
+        print("helloooooo")
+        fig, ax = plt.subplots(figsize=(10, 8))
+        for column in df.columns[1:]:
+            ax.plot(df["hour"], df[column], label=column)
+        ax.set_title("Internet traffic grouped by usage type")
+        ax.set_xlabel(xlabel_name, loc="right")
+        ax.set_ylabel("Number of access", loc="top")
+        return df, fig
+
     if xlabel_name == "年":  # 年ごとのデータの場合
         # df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
         df[xlabel_name] = df.iloc[:, 0]
@@ -39,9 +49,9 @@ def cluster(original_df):
     for n_clusters in range(min_clusters, max_clusters + 1):
         kmeans = KMeans(n_clusters=n_clusters, random_state=0)
         kmeans.fit(grouped)
-        inertia_values.append(kmeans.inertia_)
-
-    # KneeLocatorを使用してエルボーの位置を自動で選択
+        inertia_values.append(
+            kmeans.inertia_
+        )  # KneeLocatorを使用してエルボーの位置を自動で選択
     kl = KneeLocator(
         range(min_clusters, max_clusters + 1),
         inertia_values,

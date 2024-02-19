@@ -158,12 +158,15 @@ class DataAnalyzerApp(QWidget):
     def populate_column_combobox(self, index):
         if index == 2:
             self.column_combobox.clear()
-            self.column_combobox.addItems(self.data.columns[1:])
-            self.selected_dataset = self.data
+            if self.data is not None:
+                self.selected_dataset = self.data
+                if self.data.columns[0] != "hour":
+                    self.column_combobox.addItems(self.data.columns[1:])
         elif index == 1:
             self.column_combobox.clear()
-            self.column_combobox.addItems(self.clustered_data.columns[1:])
-            self.selected_dataset = self.clustered_data
+            if self.clustered_data is not None:
+                self.selected_dataset = self.clustered_data
+                self.column_combobox.addItems(self.clustered_data.columns[1:])
         else:
             self.column_combobox.clear()
         # column_combobox.clear()
