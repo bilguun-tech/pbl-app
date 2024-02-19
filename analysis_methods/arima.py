@@ -30,7 +30,7 @@ def arima(original_df, column_name):
 
     # プログラムのURL:https://toukei-lab.com/python_stock
     if dftest[1] <= 0.05:
-        error_msgmsg = "The selected data set is a stationary process. Please select another analysis method. "
+        error_msg = "The selected data set is a stationary process. Please select another analysis method. "
     else:
         #print("データは定常過程ではありません")
         # ARIMAモデル データ準備
