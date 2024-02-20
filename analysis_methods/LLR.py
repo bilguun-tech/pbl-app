@@ -16,6 +16,9 @@ def LLR(original_df, column_name):
     elif xlabel_name == "date":  # 1日ごとの場合
         df[xlabel_name] = pd.to_datetime(df[xlabel_name])
 
+    else:
+        df[xlabel_name] = df.iloc[:, 0]
+
     tau = 1.0  # カーネル幅の設定（大きいほど、広い範囲で回帰を行う）
     xlim_start = df.iloc[0, 0]
     xlim_end = df.iloc[-1, 0]

@@ -26,38 +26,23 @@ def ETS_model(original_df, column_name):
         data = df[column_name].dropna()  # NaNの行を削除
         num = 7
 
+    else:
+        msg = "This data set is not predictable. Please select another analysis method."
+        fig = None
+        return fig, msg
+
     # ETSモデルの構築
     ETS_model = ETSModel(
         data, error="add", trend="add", seasonal="add", seasonal_periods=num
     )
     ETS_fit = ETS_model.fit()
 
-    # # ETS_fitオブジェクトからモデルオブジェクトを取得
-    # model = ETS_fit.model
-    # # モデルオブジェクトのインデックス関連の属性を調査
-    # print("属性：",model._index)
-    # print("T/F：", model._index_generated)
-
     # 予測結果の取得
     pred_start = data.index[0]
     pred_end = pred_start + pd.DateOffset(days=len(data) + len(data) // 5)
-    # pred_index = pd.Index(pred_index)
-    # pred_index = pd.date_range(start=pred_start, periods=len(data) + len(data) // 5, freq=pd.infer_freq(data.index))
     pred = ETS_fit.get_prediction(start=pred_start, end=len(data) + len(data) // 5)
     df_pred = pred.summary_frame(alpha=0.05)
     print(df_pred)
-
-    ## 旧
-    # if xlabel_name == "Year":
-    #     pred_end = len(data) + len(data)//3 # サンプル内+1/3予測
-
-    # else:
-    #     # pred_end = data.index[-1] + pd.DateOffset(day=31)
-    #     if pred_end not in data.index:
-    #         pred_end = data.index[-1] # サンプル内予測
-
-    # pred = ETS_fit.get_prediction(start=data.index[0], end=pred_end)
-    # df_pred = pred.summary_frame(alpha=0.05)
 
     # 可視化
     fig, ax = plt.subplots(figsize=(10, 6))

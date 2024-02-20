@@ -4,12 +4,11 @@ import matplotlib.pyplot as plt
 
 def just_plot(df, column_name):
     # 前処理
-    print(df)
     x_label = df.columns[0]
     df["index"] = pd.DataFrame(df.iloc[:, 0])
     df.set_index(df["index"], inplace=True)
     data = df[column_name].dropna()  # NaNの行を削除
-    print(data)
+    # print(data)
 
     if (
         not (data == 0).all() and (data == 0).mean() >= 0.1
