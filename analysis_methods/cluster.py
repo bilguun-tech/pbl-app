@@ -137,10 +137,14 @@ def cluster(original_df):
 
     fig.autofmt_xdate()  # 日付が重ならないようにフォーマットを調整
     ax.set_title(f"Clustering (Number of Cluster: {best_n_clusters})")
-    ax.set_xlabel(xlabel_name, loc="right", fontname="Yu Gothic")
+    ax.set_xlabel(xlabel_name, loc="right")
     ax.set_ylabel("Value", loc="top")
+    # ax.legend(
+    #     loc='upper left', bbox_to_anchor=(1.05, 1), prop={"size": 6, 'family': "Yu Gothic"}, ncol=3,
+    # )
+
     ax.legend(
-        loc='upper left', bbox_to_anchor=(1.05, 1), prop={"size": 6, 'family': "Yu Gothic"}, ncol=3,
+        loc='upper left', bbox_to_anchor=(1.05, 1), prop={"size": 6}, ncol=3,
     )
 
     ax.ticklabel_format(style="plain", axis="y")  # 指数表記から普通の表記に変換
