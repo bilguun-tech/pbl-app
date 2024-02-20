@@ -66,16 +66,6 @@ class DataAnalyzerApp(QWidget):
         # Analysis method selection using QComboBox
         self.method_label = QLabel("Select Analysis Method:")
         self.method_combobox = QComboBox(self)
-        self.method_combobox.addItems(
-            [
-                "Just Plot",
-                "Additive method",
-                "Arima method",
-                "ETS model",
-                "Local Linear Regression",
-                "Anomaly Detection",
-            ]
-        )
         # Column name selection using QComboBox
         self.column_label = QLabel("Select Column Name:")
         self.column_combobox = QComboBox(self)
@@ -152,10 +142,30 @@ class DataAnalyzerApp(QWidget):
                 # Populate the column combobox
                 self.populate_column_combobox(self.mode_combobox.currentIndex())
 
+                self.method_combobox.clear()
                 # Determine if the file meets the condition for selecting "Cluster" mode
                 if self.data.columns[0] == "hour":
                     # Set mode_combobox to "Cluster"
-                    self.mode_combobox.setCurrentIndex(1) 
+                    self.mode_combobox.setCurrentIndex(1)
+                    self.method_combobox.addItems(
+                        [
+                            "Just Plot",
+                            "Additive method",
+                            "Local Linear Regression",
+                            "Anomaly Detection",
+                        ]
+                    )
+                else:
+                    self.method_combobox.addItems(
+                        [
+                            "Just Plot",
+                            "Additive method",
+                            "Arima method",
+                            "ETS model",
+                            "Local Linear Regression",
+                            "Anomaly Detection",
+                        ]
+                    )
 
             except Exception as e:
                 # Handle any potential errors during reading the CSV file
@@ -240,6 +250,7 @@ class DataAnalyzerApp(QWidget):
     def keyReleaseEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.close()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
