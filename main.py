@@ -152,6 +152,11 @@ class DataAnalyzerApp(QWidget):
                 # Populate the column combobox
                 self.populate_column_combobox(self.mode_combobox.currentIndex())
 
+                # Determine if the file meets the condition for selecting "Cluster" mode
+                if self.data.columns[0] == "hour":
+                    # Set mode_combobox to "Cluster"
+                    self.mode_combobox.setCurrentIndex(1) 
+
             except Exception as e:
                 # Handle any potential errors during reading the CSV file
                 print(f"Error reading CSV file: {e}")

@@ -27,7 +27,7 @@ def ETS_model(original_df, column_name):
         num = 7
 
     else:
-        msg = "This data set is not predictable. Please select another analysis method."
+        msg = "This data set is not predictable. \nPlease select another analysis method."
         fig = None
         return fig, msg
 
