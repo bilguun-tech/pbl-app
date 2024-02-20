@@ -20,7 +20,7 @@ def additive_method(original_df, column_name):
     else:
         df["index"] = pd.DataFrame(df.iloc[:, 0])
         # df["index"] = pd.to_datetime(df.iloc[:, 0], format="%Y")  # 2000->2000-01-01
-        num = 1  # 1周期
+        num = 3  # 周期
 
     df.set_index("index", inplace=True)
     data = df[column_name].dropna()  # NaNの行を削除
