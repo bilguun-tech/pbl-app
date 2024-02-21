@@ -24,11 +24,7 @@ def arima(original_df, column_name):
     dftest = adfuller(data)
     # print('ADF Statistic: %f' % dftest[0])
     print("p-value: %f" % dftest[1])
-    # print('Critical values :')
-    # for k, v in dftest[4].items():
-    #    print('\t', k, v)
 
-    # プログラムのURL:https://toukei-lab.com/python_stock
     if dftest[1] <= 0.05:
         msg = "The selected data set is a stationary process. Please select another analysis method. "
         fig = None
