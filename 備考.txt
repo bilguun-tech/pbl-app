@@ -1,0 +1,24 @@
+【使用方法】
+①「python main.py」でGUI起動
+①ファイルのインポート
+→自動的にクラスタリング解析を行った結果がプロットされる
+②Cluster or column選択
+③項目選択（Clusterの場合はどのクラスターか/columnの場合はどのデータか）
+④解析手法選択（analysis_methods内の解析手法から選択）
+⑤「解析開始」ボタンを押す
+※エラーが発生した場合、右下にあるメッセージウインドウにエラーメッセージが表示されます.
+
+
+【解析手法】
+「analysis_methods」フォルダ内にあります.
+・cluster：クラスタリング解析（可視化）
+・just_plot：データをそのままプロットしたもの（可視化）
+・LLR：局所回帰分析（可視化）
+・additive_method：加法モデル（可視化）
+・anomaly_detection：異常検知（Isoration Forest model）（可視化）
+・ETS_model：指数平滑法（予測）
+・arima：ARIMAモデル（予測）
+
+
+【動作環境】
+「requirements.txt」に記載しています.
